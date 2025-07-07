@@ -1,9 +1,38 @@
 Here's the complete game design document for your Office Chaos game:
 
-# Office Chaos: A Time Management Game
+# Soham Parek Overemployed
+
+### Day 1: Setup & Basics
+
+- Download Godot (15 minutes)
+- Create 2D scene with player character
+- Basic click-to-move movement
+    - WASD or arrow keys is better imo-pablo
+- Simple office background
+
+### Day 2-3: Core Mechanics
+
+- Task spawning system
+- Player interaction with objects
+- Timer and scoring UI
+- Basic task completion
+
+### Day 4-5: Game Systems
+
+- Multiple simultaneous tasks
+- Stress mechanics
+- Task priority system
+- Audio integration
+
+### Day 6-7: Polish & Chaos
+
+- Screen effects (shake, particles)
+- Chaos events (printer jams, urgent meetings)
 
 ## Game Overview
-"Office Chaos" is a fast-paced, single-player time management game set in a modern tech startup office. Players take on the role of a software engineer managing various office tasks while racing against time.
+"Sohem Parekh Overemployed" is a fast-paced, single-player time management game set in a modern tech startup office. Players take on the role of a software engineer managing various office tasks while racing against time.
+
+
 
 ## Core Gameplay Loop
 - Complete tasks within time limits
