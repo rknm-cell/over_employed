@@ -35,6 +35,9 @@ animations = [{
 radius = 54.0
 height = 138.0
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_inter"]
+radius = 100.0
+
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_sweqy")
 
@@ -45,3 +48,11 @@ animation = &"walk"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 1)
 shape = SubResource("CapsuleShape2D_b26j0")
+
+[node name="InteractionDetector" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionDetector"]
+shape = SubResource("CircleShape2D_inter")
+
+[connection signal="area_entered" from="InteractionDetector" to="." method="_on_interactable_entered"]
+[connection signal="area_exited" from="InteractionDetector" to="." method="_on_interactable_exited"]

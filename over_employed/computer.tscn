@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://du62ifw2l32gs"]
+
+[ext_resource type="Texture2D" uid="uid://pokhcu3fr6n2" path="res://art/pc_0000_pc_off.png" id="1_2p3k8"]
+[ext_resource type="Script" uid="uid://c4jl4ifhhr4jd" path="res://computer.gd" id="1_vu6j8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4q3hy"]
+size = Vector2(687, 199)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_inter"]
+size = Vector2(685, 244)
+
+[node name="Computer" type="StaticBody2D"]
+script = ExtResource("1_vu6j8")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_2p3k8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(2.5, -23.5)
+shape = SubResource("RectangleShape2D_4q3hy")
+
+[node name="InteractionArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea"]
+position = Vector2(1.5, -1)
+shape = SubResource("RectangleShape2D_inter")
+
+[connection signal="body_entered" from="InteractionArea" to="." method="_on_body_entered"]
+[connection signal="body_exited" from="InteractionArea" to="." method="_on_body_exited"]
