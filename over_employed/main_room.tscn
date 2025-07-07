@@ -1,7 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://dqqm47swns33n"]
 
 [ext_resource type="PackedScene" uid="uid://ctec5h0a7ixy1" path="res://player.tscn" id="1_mi4c6"]
-[ext_resource type="PackedScene" uid="uid://dvoy7hfnc2nc" path="res://pushpal_desk1.tscn" id="2_77bs5"]
+
+[ext_resource type="PackedScene" uid="uid://du62ifw2l32gs" path="res://computer.tscn" id="2_vu6j8"]
+
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_77bs5"]
 size = Vector2(3456, 32)
@@ -12,6 +14,7 @@ size = Vector2(32, 1944)
 [node name="MainRoom" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource("1_mi4c6")]
+z_index = 1
 position = Vector2(576, 324)
 
 [node name="WallTop" type="StaticBody2D" parent="."]
@@ -39,7 +42,6 @@ position = Vector2(3456, 972)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WallRight"]
 shape = SubResource("RectangleShape2D_the2v")
 
-[node name="PushpalDesk1" parent="." instance=ExtResource("2_77bs5")]
-position = Vector2(2247, 71)
-rotation = 1.5708
-scale = Vector2(4, 4)
+
+[node name="Computer" parent="." instance=ExtResource("2_vu6j8")]
+position = Vector2(1020, 144)
