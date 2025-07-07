@@ -1,7 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://dqqm47swns33n"]
 
 [ext_resource type="PackedScene" uid="uid://ctec5h0a7ixy1" path="res://player.tscn" id="1_mi4c6"]
+
 [ext_resource type="PackedScene" uid="uid://du62ifw2l32gs" path="res://computer.tscn" id="2_vu6j8"]
+
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_77bs5"]
 size = Vector2(3456, 32)
@@ -19,6 +21,7 @@ position = Vector2(576, 324)
 position = Vector2(1728, 0)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WallTop"]
+position = Vector2(-1, 0)
 shape = SubResource("RectangleShape2D_77bs5")
 
 [node name="WallBottom" type="StaticBody2D" parent="."]
@@ -38,6 +41,7 @@ position = Vector2(3456, 972)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WallRight"]
 shape = SubResource("RectangleShape2D_the2v")
+
 
 [node name="Computer" parent="." instance=ExtResource("2_vu6j8")]
 position = Vector2(1020, 144)
