@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3 uid="uid://5svu7qd851nv"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rbxf2"]
+size = Vector2(1295, 194)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vloss"]
+size = Vector2(1343, 247)
+
+[node name="Kitchen" type="Node2D"]
+
+[node name="KitchenBody" type="StaticBody2D" parent="."]
+
+[node name="IslandVisual" type="ColorRect" parent="KitchenBody"]
+offset_right = 1297.0
+offset_bottom = 194.0
+color = Color(0.625597, 0.625597, 0.625597, 1)
+
+[node name="IslandCollision" type="CollisionShape2D" parent="KitchenBody"]
+position = Vector2(647.5, 97)
+shape = SubResource("RectangleShape2D_rbxf2")
+
+[node name="KitchenInteractionArea" type="Area2D" parent="."]
+
+[node name="KitchenInteractionCollision" type="CollisionShape2D" parent="KitchenInteractionArea"]
+position = Vector2(648.5, 97.5)
+shape = SubResource("RectangleShape2D_vloss")
