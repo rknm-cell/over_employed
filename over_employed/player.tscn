@@ -1,10 +1,15 @@
-[gd_scene load_steps=9 format=3 uid="uid://ctec5h0a7ixy1"]
+
+[gd_scene load_steps=11 format=3 uid="uid://ctec5h0a7ixy1"]
+
 
 [ext_resource type="Texture2D" uid="uid://ddhllyqyjucbl" path="res://art/playerGrey_up2.png" id="1_hqtel"]
 [ext_resource type="Script" uid="uid://chk0nxl70y6mq" path="res://player.gd" id="1_sweqy"]
 [ext_resource type="Texture2D" uid="uid://dso8v0spaosmm" path="res://art/playerGrey_up1.png" id="2_sweqy"]
-[ext_resource type="Texture2D" uid="uid://1l6qnhuda4r0" path="res://art/playerGrey_walk1.png" id="3_2hs0m"]
-[ext_resource type="Texture2D" uid="uid://betnnwb0itmn6" path="res://art/playerGrey_walk2.png" id="4_1jxqw"]
+[ext_resource type="Texture2D" uid="uid://bnag87eyrwngl" path="res://run_cycle_side_0002s_0002_Layer-4-copy.png" id="4_1jxqw"]
+[ext_resource type="Texture2D" uid="uid://bhyumm4sucupl" path="res://run_cycle_side_0002s_0003_Layer-6.png" id="5_dw050"]
+[ext_resource type="Texture2D" uid="uid://lqjdgdwkk3a7" path="res://run_cycle_side_0002s_0004_Layer-4.png" id="6_b26j0"]
+[ext_resource type="Texture2D" uid="uid://dj8vvhu3msocw" path="res://run_cycle_side_0002s_0005_Layer-3.png" id="7_n7ghd"]
+[ext_resource type="Script" uid="uid://ntdodq1uclvr" path="res://interaction_detector.gd" id="8_dw050"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_dw050"]
 animations = [{
@@ -21,10 +26,16 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("3_2hs0m")
+"texture": ExtResource("4_1jxqw")
 }, {
 "duration": 1.0,
-"texture": ExtResource("4_1jxqw")
+"texture": ExtResource("5_dw050")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_b26j0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_n7ghd")
 }],
 "loop": true,
 "name": &"walk",
@@ -32,16 +43,14 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_b26j0"]
-radius = 54.0
-height = 138.0
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_inter"]
-radius = 100.0
+radius = 114.0
+height = 514.0
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_sweqy")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(1, 0)
 sprite_frames = SubResource("SpriteFrames_dw050")
 animation = &"walk"
 
@@ -50,9 +59,11 @@ position = Vector2(0, 1)
 shape = SubResource("CapsuleShape2D_b26j0")
 
 [node name="InteractionDetector" type="Area2D" parent="."]
+script = ExtResource("8_dw050")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionDetector"]
-shape = SubResource("CircleShape2D_inter")
+position = Vector2(1, 4)
+shape = SubResource("CapsuleShape2D_b26j0")
 
 [connection signal="area_entered" from="InteractionDetector" to="." method="_on_interactable_entered"]
 [connection signal="area_exited" from="InteractionDetector" to="." method="_on_interactable_exited"]
