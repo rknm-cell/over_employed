@@ -1,12 +1,12 @@
 [gd_scene load_steps=10 format=3 uid="uid://dqqm47swns33n"]
 
 [ext_resource type="PackedScene" uid="uid://ctec5h0a7ixy1" path="res://player.tscn" id="1_mi4c6"]
-[ext_resource type="PackedScene" uid="uid://b2c2aped82lxw" path="res://printer.tscn" id="2_77bs5"]
+[ext_resource type="PackedScene" path="res://printer.tscn" id="2_77bs5"]
 [ext_resource type="PackedScene" uid="uid://du62ifw2l32gs" path="res://computer.tscn" id="2_vu6j8"]
-[ext_resource type="PackedScene" uid="uid://dvoy7hfnc2nc" path="res://pushpal_desk1.tscn" id="4_a7ayd"]
-[ext_resource type="Script" uid="uid://bt7flelvl640a" path="res://pushpal_desk_3.gd" id="5_1oo4e"]
-[ext_resource type="PackedScene" uid="uid://5svu7qd851nv" path="res://kitchen.tscn" id="5_ss6w1"]
-[ext_resource type="Script" uid="uid://cav7axe0no0ac" path="res://pushpal_desk_2.gd" id="6_8007g"]
+[ext_resource type="PackedScene" path="res://pushpal_desk1.tscn" id="4_a7ayd"]
+[ext_resource type="Script" path="res://pushpal_desk_3.gd" id="5_1oo4e"]
+[ext_resource type="PackedScene" path="res://kitchen.tscn" id="5_ss6w1"]
+[ext_resource type="Script" path="res://pushpal_desk_2.gd" id="6_8007g"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_77bs5"]
 size = Vector2(3456, 32)
@@ -71,6 +71,8 @@ scale = Vector2(2, 2)
 position = Vector2(1405, 58)
 rotation = 1.5708
 scale = Vector2(4, 4)
+
+[node name="Sprite2D" type="Sprite2D" parent="PushpalDesk1"]
 
 [node name="PushpalDesk3" parent="." instance=ExtResource("4_a7ayd")]
 position = Vector2(3193, 58)
