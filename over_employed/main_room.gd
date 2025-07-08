@@ -1,20 +1,23 @@
 extends Node2D
 
 # Game state
-var game_time_left = 180.0  # 3 minutes in seconds
+var game_time_elapsed = 0.0 # count UP from 0
 var is_game_active = false
 var fail_count = 0
 var max_fails = 3
-var active_tasks = {}  # Dictionary to track active tasks
-var task_locations = []  # Array of task nodes
-var score = 0
+var task_counter = 1
 
 # Timers
-@onready var main_timer = Timer.new()
 @onready var task_spawn_timer = Timer.new()
+
+var active_tasks = {}  # Dictionary to track active tasks
+var all_task_locations = []  # Full list for later
+var current_task_locations = []  # What we're using now
 
 # UI (we'll add a simple label for now)
 var ui_label: Label
+var score = 0
+
 
 func _ready():
     setup_ui()
@@ -23,17 +26,24 @@ func _ready():
     start_game() 	# Auto-start for testing (remove this later)
 
 func setup_task_locations():
-    # Get all the task location nodes
-    task_locations = [
+    # Full list (for later when you add more)
+    all_task_locations = [
         $PushpalDesk1,
-        #$PushpalDesk2, 
-        #$PushpalDesk3,
-        #$Computer,
-        #$Computer2,
-        #$Printer,
-        #$Kitchen
+        $PushpalDesk2,  # Add back later
+        # $Computer,
+        # $Computer2, 
+        # $Printer,
+        # $Kitchen
     ]
-    print("Found ", task_locations.size(), " task locations")
+    
+    # For now, just use what we have
+    current_task_locations = [
+        $PushpalDesk1,
+        $PushpalDesk2
+        # AddPushpalDesk2 when ready
+    ]
+    
+    print("Using ", current_task_locations.size(), " task locations for now")
     
 func setup_ui():
     # Create a simple UI label
@@ -44,46 +54,62 @@ func setup_ui():
     update_ui()
 
 func setup_timers():
-    # Main game timer
-    add_child(main_timer)
-    main_timer.wait_time = game_time_left
-    main_timer.one_shot = true
-    main_timer.timeout.connect(_on_game_won)
-    
-    # Task spawn timer  
+    # Task spawn timer - triggers every 30 seconds after initial spawn
     add_child(task_spawn_timer)
-    task_spawn_timer.wait_time = 2.0
-    task_spawn_timer.timeout.connect(_on_spawn_task)
-
+    task_spawn_timer.wait_time = 30.0
+    task_spawn_timer.timeout.connect(_on_spawn_cycle)
 
 func _process(delta):
     if is_game_active:
+        game_time_elapsed += delta
         update_ui()
 
 func update_ui():
-    var minutes = int(main_timer.time_left) / 60
-    var seconds = int(main_timer.time_left) % 60
-    ui_label.text = "Time: %02d:%02d | Fails: %d/%d | Score: %d" % [minutes, seconds, fail_count, max_fails, score]
+    var minutes = int(game_time_elapsed) / 60
+    var seconds = int(game_time_elapsed) % 60
+    ui_label.text = "Time: %02d:%02d | Tasks: %d | Fails: %d/%d | Score: %d" % [minutes, seconds, task_counter, fail_count, max_fails, score]
 
 func start_game():
     print("Starting game...")
     is_game_active = true
     fail_count = 0
-    main_timer.start()
+    game_time_elapsed = 0.0
+    task_counter = 2
+    
+    # Initial spawn: Always PushpalDesk1 + PushpalDesk2
+    spawn_initial_tasks()
+    
+    # Start the 30-second cycle timer
     task_spawn_timer.start()
+    
+func spawn_initial_tasks():
+    # Always spawn at first 2 locations (when we have them)
+    var initial_locations = current_task_locations.slice(0, min(2, current_task_locations.size()))
+    
+    for location in initial_locations:
+        spawn_task_at_location(location)
+    
+    print("Initial tasks spawned at ", initial_locations.size(), " locations")
 
-func _on_spawn_task():
+func _on_spawn_cycle():
     if not is_game_active:
         return
-        
-    # Pick a random task location that doesn't already have an active task
+    
+    task_counter += 1
+    print("30-second cycle! Task counter now: ", task_counter)
+    
+    # Spawn 1 more random task at an inactive location
+    spawn_random_task()
+
+func spawn_random_task():
+    # Find locations that don't have active tasks
     var available_locations = []
-    for location in task_locations:
+    for location in current_task_locations:
         if location.name not in active_tasks:
             available_locations.append(location)
     
     if available_locations.size() == 0:
-        print("No available task locations!")
+        print("All locations are active!")
         return
     
     var chosen_location = available_locations[randi() % available_locations.size()]
@@ -96,7 +122,7 @@ func spawn_task_at_location(location_node):
     # Create a timer for this specific task
     var task_timer = Timer.new()
     add_child(task_timer)
-    task_timer.wait_time = 5.0  # 15 seconds to complete
+    task_timer.wait_time = 15.0  # 15 seconds to complete
     task_timer.one_shot = true
     task_timer.timeout.connect(_on_task_failed.bind(task_name))
     task_timer.start()
@@ -167,7 +193,6 @@ func add_fail():
 
 func end_game(won: bool):
     is_game_active = false
-    main_timer.stop()
     task_spawn_timer.stop()
     
     # Stop all active task timers
