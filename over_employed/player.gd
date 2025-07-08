@@ -27,29 +27,18 @@ func _physics_process(delta):
 	else:
 		$AnimatedSprite2D.stop()
 
+	if velocity.x != 0:
+		$AnimatedSprite2D.animation = "walk"
+		$AnimatedSprite2D.flip_v = false
+		$AnimatedSprite2D.flip_h = velocity.x > 0
+	elif velocity.y != 0:
+		if velocity.y > 0:
+			$AnimatedSprite2D.animation = "down"
+		else:
+			$AnimatedSprite2D.animation = "up"
+
 	self.velocity = velocity
 	move_and_slide()
-
+	
 	# Clamp position to stay inside screen
 	position = position.clamp(Vector2.ZERO, screen_size)
-
-func _input(event):
-	if event.is_action_pressed("ui_accept"):
-		print("Spacebar pressed!")
-		if current_interactable:
-			print("Interacting with object in range!")
-			if current_interactable.has_method("computer_activate"):
-				print("Activating computer!")
-				current_interactable.computer_activate()
-		else:
-			print("Nothing to interact with nearby")
-
-func _on_interactable_entered(area: Area2D):
-	if area.get_parent().has_method("computer_activate"):
-		current_interactable = area.get_parent()
-		print("Entered interaction range - Press spacebar to interact!")
-
-func _on_interactable_exited(area: Area2D):
-	if current_interactable and area.get_parent() == current_interactable:
-		current_interactable = null
-		print("Left interaction range")

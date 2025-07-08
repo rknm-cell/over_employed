@@ -3,6 +3,7 @@ extends StaticBody2D
 @onready var sprite = $Sprite2D
 @export var pc_off_texture: Texture2D = preload("res://art/pc_0000_pc_off.png")
 @export var pc_on_texture: Texture2D = preload("res://art/pc_0001_pc_on.png")
+@export var speed = 400
 
 var player_in_range = false
 var is_on = false
