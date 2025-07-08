@@ -8,11 +8,11 @@ var player_nearby = false
 var is_active = false
 
 @onready var typing_sound = preload("res://sounds/laptop_typing.wav")
-
+@onready var computerOn_sound = preload("res://sounds/computer_start.wav")
 func _ready():
 	# Setup audio
 	add_child(audio_player)
-	audio_player.stream = typing_sound
+	
 	# Connect signals
 	interaction_area.body_entered.connect(_on_player_entered)
 	interaction_area.body_exited.connect(_on_player_exited)
@@ -38,9 +38,17 @@ func _on_player_exited(body):
 func activate_monitor():
 	is_active = true
 	monitor.color = Color.GREEN
-	play_sounds()
+	computerOn()
+	await get_tree().create_timer(4.0).timeout
 	print("Monitor activated!")
+	typing()
+	print("player typing")
 
-func play_sounds():
+func computerOn():
+	audio_player.stream = computerOn_sound
+	audio_player.play()
+	
+func typing():
 	# Generate a simple ding sound
+	audio_player.stream = typing_sound
 	audio_player.play()
