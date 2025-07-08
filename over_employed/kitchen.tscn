@@ -1,4 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://5svu7qd851nv"]
+[gd_scene load_steps=4 format=3 uid="uid://5svu7qd851nv"]
+
+[ext_resource type="Script" uid="uid://chawrwo4dv2ap" path="res://kitchen.gd" id="1_vloss"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rbxf2"]
 size = Vector2(1295, 194)
@@ -7,6 +9,7 @@ size = Vector2(1295, 194)
 size = Vector2(1343, 247)
 
 [node name="Kitchen" type="Node2D"]
+script = ExtResource("1_vloss")
 
 [node name="KitchenBody" type="StaticBody2D" parent="."]
 
