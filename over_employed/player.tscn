@@ -1,24 +1,51 @@
+[gd_scene load_steps=17 format=3 uid="uid://ctec5h0a7ixy1"]
 
-[gd_scene load_steps=11 format=3 uid="uid://ctec5h0a7ixy1"]
-
-
-[ext_resource type="Texture2D" uid="uid://ddhllyqyjucbl" path="res://art/playerGrey_up2.png" id="1_hqtel"]
 [ext_resource type="Script" uid="uid://chk0nxl70y6mq" path="res://player.gd" id="1_sweqy"]
-[ext_resource type="Texture2D" uid="uid://dso8v0spaosmm" path="res://art/playerGrey_up1.png" id="2_sweqy"]
+[ext_resource type="Texture2D" uid="uid://dqvyugoao22q3" path="res://run_cycle_front_0002s_0003_Layer-25.png" id="2_ivps1"]
+[ext_resource type="Texture2D" uid="uid://coykp7rdo721l" path="res://run_cycle_side-copy-2_0002s_0000_Layer-24-copy.png" id="3_urp6f"]
 [ext_resource type="Texture2D" uid="uid://bnag87eyrwngl" path="res://run_cycle_side_0002s_0002_Layer-4-copy.png" id="4_1jxqw"]
+[ext_resource type="Texture2D" uid="uid://bhcog8ru1ttxj" path="res://run_cycle_side-copy-2_0002s_0001_Layer-26.png" id="4_bwjto"]
+[ext_resource type="Texture2D" uid="uid://cqqup1puaxw7l" path="res://run_cycle_side-copy-2_0002s_0002_Layer-24.png" id="5_606se"]
 [ext_resource type="Texture2D" uid="uid://bhyumm4sucupl" path="res://run_cycle_side_0002s_0003_Layer-6.png" id="5_dw050"]
 [ext_resource type="Texture2D" uid="uid://lqjdgdwkk3a7" path="res://run_cycle_side_0002s_0004_Layer-4.png" id="6_b26j0"]
+[ext_resource type="Texture2D" uid="uid://bnor0im2flo8k" path="res://run_cycle_back_0002s_0000_Layer-28-copy-2.png" id="6_bwjto"]
+[ext_resource type="Texture2D" uid="uid://bo3w78xbeuxyc" path="res://run_cycle_back_0002s_0001_Layer-28.png" id="7_606se"]
 [ext_resource type="Texture2D" uid="uid://dj8vvhu3msocw" path="res://run_cycle_side_0002s_0005_Layer-3.png" id="7_n7ghd"]
 [ext_resource type="Script" uid="uid://ntdodq1uclvr" path="res://interaction_detector.gd" id="8_dw050"]
+[ext_resource type="Texture2D" uid="uid://d2p7qlgu22r0g" path="res://run_cycle_back_0002s_0002_Layer-29-copy-2.png" id="8_u1c27"]
+[ext_resource type="Texture2D" uid="uid://r84i08qolya1" path="res://run_cycle_back_0002s_0003_Layer-29.png" id="9_op7ga"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_dw050"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_hqtel")
+"texture": ExtResource("2_ivps1")
 }, {
 "duration": 1.0,
-"texture": ExtResource("2_sweqy")
+"texture": ExtResource("3_urp6f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_bwjto")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_606se")
+}],
+"loop": true,
+"name": &"down",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_bwjto")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_u1c27")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_606se")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_op7ga")
 }],
 "loop": true,
 "name": &"up",
@@ -52,7 +79,7 @@ script = ExtResource("1_sweqy")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(1, 0)
 sprite_frames = SubResource("SpriteFrames_dw050")
-animation = &"walk"
+animation = &"down"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 1)
