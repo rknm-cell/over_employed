@@ -1,4 +1,3 @@
-
 [gd_scene load_steps=10 format=3 uid="uid://dqqm47swns33n"]
 
 [ext_resource type="PackedScene" uid="uid://ctec5h0a7ixy1" path="res://player.tscn" id="1_mi4c6"]
@@ -8,7 +7,6 @@
 [ext_resource type="Script" uid="uid://bt7flelvl640a" path="res://pushpal_desk_3.gd" id="5_1oo4e"]
 [ext_resource type="PackedScene" uid="uid://5svu7qd851nv" path="res://kitchen.tscn" id="5_ss6w1"]
 [ext_resource type="Script" uid="uid://cav7axe0no0ac" path="res://pushpal_desk_2.gd" id="6_8007g"]
-
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_77bs5"]
 size = Vector2(3456, 32)
@@ -21,6 +19,7 @@ size = Vector2(32, 1944)
 [node name="Player" parent="." groups=["Player"] instance=ExtResource("1_mi4c6")]
 z_index = 1
 position = Vector2(486, 310)
+scale = Vector2(0.8, 0.8)
 
 [node name="WallTop" type="StaticBody2D" parent="."]
 position = Vector2(1728, 0)
