@@ -4,25 +4,27 @@
 [ext_resource type="Script" uid="uid://c4jl4ifhhr4jd" path="res://computer.gd" id="1_vu6j8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4q3hy"]
-size = Vector2(687, 199)
+size = Vector2(778.75, 211.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_inter"]
-size = Vector2(685, 244)
+size = Vector2(779.5, 212.5)
 
 [node name="Computer" type="StaticBody2D"]
 script = ExtResource("1_vu6j8")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(48, -20)
+scale = Vector2(1.14035, 0.84)
 texture = ExtResource("1_2p3k8")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(2.5, -23.5)
+position = Vector2(48.625, -21.75)
 shape = SubResource("RectangleShape2D_4q3hy")
 
 [node name="InteractionArea" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea"]
-position = Vector2(1.5, -1)
+position = Vector2(48.25, -22.25)
 shape = SubResource("RectangleShape2D_inter")
 
 [connection signal="body_entered" from="InteractionArea" to="." method="_on_body_entered"]
