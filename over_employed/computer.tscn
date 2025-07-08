@@ -18,6 +18,7 @@ scale = Vector2(1.14035, 0.84)
 texture = ExtResource("1_2p3k8")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2(48.625, -21.75)
 shape = SubResource("RectangleShape2D_4q3hy")
 
@@ -26,6 +27,8 @@ shape = SubResource("RectangleShape2D_4q3hy")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea"]
 position = Vector2(48.25, -22.25)
 shape = SubResource("RectangleShape2D_inter")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 
 [connection signal="body_entered" from="InteractionArea" to="." method="_on_body_entered"]
 [connection signal="body_exited" from="InteractionArea" to="." method="_on_body_exited"]
