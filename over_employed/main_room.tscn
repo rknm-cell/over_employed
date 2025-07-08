@@ -1,8 +1,14 @@
-[gd_scene load_steps=6 format=3 uid="uid://dqqm47swns33n"]
+
+[gd_scene load_steps=10 format=3 uid="uid://dqqm47swns33n"]
 
 [ext_resource type="PackedScene" uid="uid://ctec5h0a7ixy1" path="res://player.tscn" id="1_mi4c6"]
-[ext_resource type="PackedScene" path="res://laptop.tscn" id="2_77bs5"]
+[ext_resource type="PackedScene" uid="uid://b2c2aped82lxw" path="res://printer.tscn" id="2_77bs5"]
 [ext_resource type="PackedScene" uid="uid://du62ifw2l32gs" path="res://computer.tscn" id="2_vu6j8"]
+[ext_resource type="PackedScene" uid="uid://dvoy7hfnc2nc" path="res://pushpal_desk1.tscn" id="4_a7ayd"]
+[ext_resource type="Script" uid="uid://bt7flelvl640a" path="res://pushpal_desk_3.gd" id="5_1oo4e"]
+[ext_resource type="PackedScene" uid="uid://5svu7qd851nv" path="res://kitchen.tscn" id="5_ss6w1"]
+[ext_resource type="Script" uid="uid://cav7axe0no0ac" path="res://pushpal_desk_2.gd" id="6_8007g"]
+
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_77bs5"]
 size = Vector2(3456, 32)
@@ -42,7 +48,42 @@ position = Vector2(3456, 972)
 shape = SubResource("RectangleShape2D_the2v")
 
 [node name="Computer" parent="." instance=ExtResource("2_vu6j8")]
-position = Vector2(1020, 144)
+position = Vector2(2046, 1125)
+scale = Vector2(1.2, 1.2)
 
-[node name="Laptop" parent="." instance=ExtResource("2_77bs5")]
-position = Vector2(90, 94)
+[node name="Computer2" parent="." instance=ExtResource("2_vu6j8")]
+position = Vector2(760, 1119)
+scale = Vector2(1.2, 1.2)
+
+[node name="SupplyCloset" parent="." instance=ExtResource("2_vu6j8")]
+position = Vector2(250, 1848)
+scale = Vector2(0.7, 0.7)
+
+[node name="PrinterTable" parent="." instance=ExtResource("2_vu6j8")]
+position = Vector2(3385, 1414)
+rotation = -1.5708
+scale = Vector2(0.7, 0.7)
+
+[node name="Printer" parent="." instance=ExtResource("2_77bs5")]
+position = Vector2(3259, 1770)
+scale = Vector2(2, 2)
+
+[node name="PushpalDesk1" parent="." instance=ExtResource("4_a7ayd")]
+position = Vector2(1405, 58)
+rotation = 1.5708
+scale = Vector2(4, 4)
+
+[node name="PushpalDesk3" parent="." instance=ExtResource("4_a7ayd")]
+position = Vector2(3193, 58)
+rotation = 1.5708
+scale = Vector2(4, 4)
+script = ExtResource("5_1oo4e")
+
+[node name="PushpalDesk2" parent="." instance=ExtResource("4_a7ayd")]
+position = Vector2(2340, 58)
+rotation = 1.5708
+scale = Vector2(4, 4)
+script = ExtResource("6_8007g")
+
+[node name="Kitchen" parent="." instance=ExtResource("5_ss6w1")]
+position = Vector2(1079, 1715)

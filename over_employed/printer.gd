@@ -1,4 +1,4 @@
-extends Area2D
+extends Node2D
 
 var player_in_range = false
 var task_done = false
@@ -35,3 +35,4 @@ func _on_body_exited(body: Node2D) -> void:
 	if body.is_in_group("Player"):
 		print("user left zone")
 		player_in_range = false
+		
