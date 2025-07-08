@@ -7,10 +7,12 @@ extends Node2D
 var player_nearby = false
 var is_active = false
 
+@onready var typing_sound = preload("res://sounds/laptop_typing.wav")
+
 func _ready():
 	# Setup audio
 	add_child(audio_player)
-	
+	audio_player.stream = typing_sound
 	# Connect signals
 	interaction_area.body_entered.connect(_on_player_entered)
 	interaction_area.body_exited.connect(_on_player_exited)
@@ -28,21 +30,17 @@ func _on_player_exited(body):
 	if body.name == "Player":
 		player_nearby = false
 		monitor.color = Color.BLACK
+		audio_player.stop()
 		print("Player left desk area")
-	
+		
 	is_active = false
 
 func activate_monitor():
 	is_active = true
 	monitor.color = Color.GREEN
-	play_ding_sound()
+	play_sounds()
 	print("Monitor activated!")
 
-func play_ding_sound():
+func play_sounds():
 	# Generate a simple ding sound
-	var stream = AudioStreamGenerator.new()
-	stream.mix_rate = 22050
-	stream.buffer_length = 0.1
-	audio_player.autoplay = true
-	audio_player.stream = stream
 	audio_player.play()
