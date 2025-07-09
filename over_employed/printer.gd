@@ -165,7 +165,7 @@ func complete_task():
 	print("Printer idle...")
 	
 	# Wait 2 seconds then start new task
-	await get_tree().create_timer(15.0).timeout
+	await get_tree().create_timer(5.0).timeout
 	start_random_printer_task()
 
 func reset_p_hold():
