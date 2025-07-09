@@ -11,9 +11,9 @@ size = Vector2(121, 115)
 [node name="Printer" type="Node2D"]
 script = ExtResource("1_jhpce")
 
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
+[node name="PrinterBody" type="StaticBody2D" parent="."]
 
-[node name="ColorRect" type="ColorRect" parent="StaticBody2D"]
+[node name="PrinterVisual" type="ColorRect" parent="PrinterBody"]
 custom_minimum_size = Vector2(100, 100)
 offset_left = -23.0
 offset_top = -33.0
@@ -21,12 +21,12 @@ offset_right = 83.0
 offset_bottom = 70.0
 color = Color(0, 0, 0, 1)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PrinterBody"]
 position = Vector2(30, 18.5)
 shape = SubResource("RectangleShape2D_18hgq")
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="InteractionArea" type="Area2D" parent="."]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="InteractionCollision" type="CollisionShape2D" parent="InteractionArea"]
 position = Vector2(30.5, 17.5)
 shape = SubResource("RectangleShape2D_syt5x")
