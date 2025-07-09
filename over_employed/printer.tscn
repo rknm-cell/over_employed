@@ -30,3 +30,7 @@ shape = SubResource("RectangleShape2D_18hgq")
 [node name="InteractionCollision" type="CollisionShape2D" parent="InteractionArea"]
 position = Vector2(30.5, 17.5)
 shape = SubResource("RectangleShape2D_syt5x")
+
+[node name="TaskBubble" type="Sprite2D" parent="."]
+
+[node name="InstructionBubble" type="Sprite2D" parent="."]

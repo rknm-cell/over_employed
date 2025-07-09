@@ -30,16 +30,16 @@ func setup_task_locations():
 	all_task_locations = [
 		$PushpalDesk1,
 		$PushpalDesk2,  # Add back later
+		$Printer,
 		# $Computer,
 		# $Computer2, 
-		# $Printer,
 		# $Kitchen
 	]
 	
 	# For now, just use what we have
 	current_task_locations = [
 		$PushpalDesk1,
-		$PushpalDesk2
+		$Printer,
 		# AddPushpalDesk2 when ready
 	]
 	
