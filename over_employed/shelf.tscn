@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://cwy2la4ye68v6"]
+[gd_scene load_steps=3 format=3 uid="uid://wrftvqp476ci"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jgb4e"]
 size = Vector2(622, 225)
@@ -32,3 +32,7 @@ size_flags_vertical = 4
 [node name="ShelfInteractionCollision" type="CollisionShape2D" parent="InteractionArea"]
 position = Vector2(310, 112)
 shape = SubResource("RectangleShape2D_0edba")
+
+[node name="TaskBubble" type="Sprite2D" parent="."]
+
+[node name="InstructionBubble" type="Sprite2D" parent="."]

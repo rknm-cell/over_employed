@@ -6,8 +6,17 @@ extends Node2D
 @onready var interaction_area = $InteractionArea
 @onready var audio_player = AudioStreamPlayer2D.new()
 
+# ADD these sprite node references:
+@onready var task_bubble = $TaskBubble
+@onready var instruction_bubble = $InstructionBubble
+
+# ADD bubble texture preloads:
+@onready var bubble_exclamation = preload("res://art/speech_bubbles/bubble_exclamation.png")
+@onready var bubble_press_p = preload("res://art/speech_bubbles/bubble_press_p.png")
+
 var player_nearby = false
 var has_paper = true
+var has_active_task = false
 
 # Sounds
 @onready var sounds = {
@@ -32,6 +41,11 @@ func _ready():
 	# Setup paper visual
 	setup_paper_visual()
 	update_shelf_visual()
+	
+	task_bubble.texture = bubble_exclamation
+	instruction_bubble.texture = bubble_press_p
+	task_bubble.visible = false
+	instruction_bubble.visible = false
 
 func setup_paper_visual():
 	# Create paper visual if it doesn't exist
@@ -71,6 +85,15 @@ func take_paper():
 	update_shelf_visual()
 	play_sound("paper_pickup")
 	print("Picked up paper!")
+	
+	# Deactivate shelf task and reactivate printer
+	set_task_active(false)
+	
+	# Tell printer to show "return to printer" state
+	var printer = get_tree().get_first_node_in_group("printer")  # You might need to add printer to a group
+	if printer:
+		printer.current_state = printer.PrinterState.WAITING_FOR_PAPER_RETURN
+		printer.update_visual_state()
 
 func respawn_paper():
 	# Called when printer is fixed
@@ -85,6 +108,7 @@ func update_shelf_visual():
 func _on_player_entered(body):
 	if body.is_in_group("player"):
 		player_nearby = true
+		update_visual_state()
 		if has_paper:
 			print("Press P to pick up paper")
 		else:
@@ -93,6 +117,7 @@ func _on_player_entered(body):
 func _on_player_exited(body):
 	if body.is_in_group("player"):
 		player_nearby = false
+		update_visual_state()
 
 func play_sound(sound_name: String):
 	if sounds.has(sound_name):
@@ -100,3 +125,26 @@ func play_sound(sound_name: String):
 		audio_player.play()
 	else:
 		print("Sound not found: ", sound_name)
+		
+func set_task_active(active: bool):
+	has_active_task = active
+	update_visual_state()
+	if active:
+		print("Paper shelf now has active task!")
+	else:
+		print("Paper shelf task cleared")
+
+func update_visual_state():
+	if has_active_task:
+		if player_nearby:
+			# Show instruction, hide task bubble
+			task_bubble.visible = false
+			instruction_bubble.visible = true
+		else:
+			# Show task bubble, hide instruction
+			task_bubble.visible = true
+			instruction_bubble.visible = false
+	else:
+		# No active task - hide both
+		task_bubble.visible = false
+		instruction_bubble.visible = false
