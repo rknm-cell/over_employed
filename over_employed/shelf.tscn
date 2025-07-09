@@ -1,0 +1,34 @@
+[gd_scene load_steps=3 format=3 uid="uid://cwy2la4ye68v6"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jgb4e"]
+size = Vector2(622, 225)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0edba"]
+size = Vector2(646, 246)
+
+[node name="Shelf" type="Node2D"]
+
+[node name="ShelfBody" type="StaticBody2D" parent="."]
+
+[node name="ShelfVisual" type="ColorRect" parent="ShelfBody"]
+offset_right = 622.0
+offset_bottom = 223.0
+color = Color(0.292044, 0.0577099, 4.68072e-06, 1)
+
+[node name="ShelfVisualCollision" type="CollisionShape2D" parent="ShelfBody"]
+position = Vector2(311, 111.5)
+shape = SubResource("RectangleShape2D_jgb4e")
+
+[node name="PaperVisual" type="ColorRect" parent="ShelfBody"]
+offset_left = 246.0
+offset_top = 17.0
+offset_right = 286.0
+offset_bottom = 57.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="InteractionArea" type="Area2D" parent="."]
+
+[node name="ShelfInteractionCollision" type="CollisionShape2D" parent="InteractionArea"]
+position = Vector2(310, 112)
+shape = SubResource("RectangleShape2D_0edba")
