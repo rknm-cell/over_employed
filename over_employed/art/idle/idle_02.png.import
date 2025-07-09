@@ -2,18 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-
-uid="uid://diebvol2htryl"
-
-path="res://.godot/imported/bubble_hold_space.png-4fe0857e76a481787b8888a5fa8287be.ctex"
+uid="uid://b3se3uqtsww6t"
+path="res://.godot/imported/idle_02.png-9e9831fad5717a49eb85cf81940da74e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/speech_bubbles/bubble_hold_space.png"
-dest_files=["res://.godot/imported/bubble_hold_space.png-4fe0857e76a481787b8888a5fa8287be.ctex"]
+source_file="res://art/idle/idle_02.png"
+dest_files=["res://.godot/imported/idle_02.png-9e9831fad5717a49eb85cf81940da74e.ctex"]
 
 [params]
 
