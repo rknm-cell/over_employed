@@ -36,6 +36,8 @@ func _physics_process(delta):
 			$AnimatedSprite2D.animation = "down"
 		else:
 			$AnimatedSprite2D.animation = "up"
+	else:
+		$AnimatedSprite2D.animation = "idle"
 
 	self.velocity = velocity
 	move_and_slide()
