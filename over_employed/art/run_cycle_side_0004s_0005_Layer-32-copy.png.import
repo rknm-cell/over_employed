@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cfb6dcny0v2oy"
-path="res://.godot/imported/enemyFlyingAlt_2.png-31dc7310eda6e1b721224f3cd932c076.ctex"
+uid="uid://k4vjx7kmdm1p"
+path="res://.godot/imported/run_cycle_side_0004s_0005_Layer-32-copy.png-8bb7b40e77dd2486e734796d6b9fbe6b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/enemyFlyingAlt_2.png"
-dest_files=["res://.godot/imported/enemyFlyingAlt_2.png-31dc7310eda6e1b721224f3cd932c076.ctex"]
+source_file="res://art/run_cycle_side_0004s_0005_Layer-32-copy.png"
+dest_files=["res://.godot/imported/run_cycle_side_0004s_0005_Layer-32-copy.png-8bb7b40e77dd2486e734796d6b9fbe6b.ctex"]
 
 [params]
 
