@@ -8,8 +8,8 @@
 [ext_resource type="Script" uid="uid://bt7flelvl640a" path="res://pushpal_desk_3.gd" id="5_1oo4e"]
 [ext_resource type="PackedScene" uid="uid://5svu7qd851nv" path="res://kitchen.tscn" id="5_ss6w1"]
 [ext_resource type="Script" uid="uid://cav7axe0no0ac" path="res://pushpal_desk_2.gd" id="6_8007g"]
-[ext_resource type="PackedScene" uid="uid://qvso6mgwccvv" path="res://game_ui.tscn" id="8_bdfba"]
-[ext_resource type="PackedScene" uid="uid://cwy2la4ye68v6" path="res://shelf.tscn" id="9_pj3qg"]
+[ext_resource type="PackedScene" path="res://game_ui.tscn" id="8_bdfba"]
+[ext_resource type="PackedScene" uid="uid://wrftvqp476ci" path="res://shelf.tscn" id="9_pj3qg"]
 [ext_resource type="Script" uid="uid://dfd573usmvp4g" path="res://paper_shelf.gd" id="10_pj3qg"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_77bs5"]
