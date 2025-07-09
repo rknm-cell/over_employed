@@ -9,6 +9,7 @@ size = Vector2(120, 80)
 size = Vector2(138.5, 90.5)
 
 [node name="Desk" type="Node2D"]
+rotation = 1.57161
 script = ExtResource("1_ep8l3")
 
 [node name="DeskBody" type="StaticBody2D" parent="."]
@@ -34,3 +35,7 @@ shape = SubResource("RectangleShape2D_t5y75")
 [node name="InteractionCollision" type="CollisionShape2D" parent="InteractionArea"]
 position = Vector2(60.25, 25.25)
 shape = SubResource("RectangleShape2D_se7ci")
+
+[node name="TaskBubble" type="Sprite2D" parent="."]
+
+[node name="InstructionBubble" type="Sprite2D" parent="."]

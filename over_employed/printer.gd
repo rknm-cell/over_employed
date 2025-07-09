@@ -4,9 +4,26 @@ extends Node2D
 @onready var printer_visual = $PrinterBody/PrinterVisual  # Your printer rectangle
 @onready var interaction_area = $InteractionArea
 @onready var audio_player = AudioStreamPlayer2D.new()
+# ADD these variables at the top with your other @onready vars:
+@onready var task_bubble = $TaskBubble
+@onready var instruction_bubble = $InstructionBubble
+
+# UPDATE the texture preloads:
+@onready var bubble_cluster = preload("res://art/speech_bubbles/bubble_cluster.png")
+@onready var bubble_exclamation = preload("res://art/speech_bubbles/bubble_exclamation.png") 
+@onready var bubble_hold_p = preload("res://art/speech_bubbles/bubble_hold_p.png")
+@onready var bubble_press_p = preload("res://art/speech_bubbles/bubble_press_p.png")
 
 # Printer states
-enum PrinterState { IDLE, OUT_OF_PAPER, PAPER_JAM, FIXING, COMPLETED }
+enum PrinterState { 
+	IDLE, 
+	OUT_OF_PAPER, 
+	PAPER_JAM, 
+	FIXING, 
+	COMPLETED,
+	WAITING_FOR_PAPER_PICKUP,
+	WAITING_FOR_PAPER_RETURN
+}
 var current_state = PrinterState.IDLE
 var player_nearby = false
 
@@ -27,6 +44,7 @@ var game_ui: CanvasLayer
 
 func _ready():
 	add_child(audio_player)
+	add_to_group("printer")
 	
 	# Find the GameUI node
 	game_ui = get_tree().get_first_node_in_group("game_ui")
@@ -36,9 +54,20 @@ func _ready():
 	interaction_area.body_entered.connect(_on_player_entered)
 	interaction_area.body_exited.connect(_on_player_exited)
 	
-	# Auto-start printer task after 2-3 seconds
-	await get_tree().create_timer(2.5).timeout
-	start_random_printer_task()
+	task_bubble.visible = false
+	instruction_bubble.visible = false
+	
+# ADD this function for MainRoom to call:
+func set_task_active(active: bool):
+	if active:
+		start_random_printer_task()
+		print("Printer task activated by MainRoom")
+	else:
+		# Reset printer to idle when task fails/completes
+		current_state = PrinterState.IDLE
+		update_printer_visual()
+		print("Printer task deactivated")
+	update_visual_state()
 
 func start_random_printer_task():
 	# Randomly choose between out of paper (blue) or paper jam (red)
@@ -55,6 +84,7 @@ func start_random_printer_task():
 			print("Paper jam!")
 	
 	update_printer_visual()
+	update_visual_state()
 
 func _input(event):
 	# Handle P key press for paper refill (when player has paper)
@@ -92,6 +122,8 @@ func handle_p_key_press():
 	match current_state:
 		PrinterState.OUT_OF_PAPER:
 			attempt_refill_paper()
+		PrinterState.WAITING_FOR_PAPER_RETURN:
+			attempt_refill_paper()
 		PrinterState.PAPER_JAM:
 			print("Hold P to fix paper jam")
 		PrinterState.IDLE:
@@ -101,8 +133,16 @@ func handle_p_key_press():
 
 func attempt_refill_paper():
 	if not game_ui.has_item("paper"):
-		print("You need paper to refill the printer!")
-		flash_printer_color()
+		# Player doesn't have paper - need to go get it from shelf
+		print("You need paper from the shelf!")
+		current_state = PrinterState.WAITING_FOR_PAPER_PICKUP
+		
+		# Activate the paper shelf
+		var shelf = get_tree().get_first_node_in_group("paper_shelf")
+		if shelf:
+			shelf.set_task_active(true)
+		
+		update_visual_state()  # Hide printer bubbles
 		return
 	
 	# Player has paper, start refilling
@@ -156,17 +196,14 @@ func complete_task():
 	print("Printer task completed!")
 	update_printer_visual()
 	
-	# Stay green for 1 second, then go idle
-	await get_tree().create_timer(1.0).timeout
+	# Notify MainRoom task is complete
+	var main_room = get_parent()
+	main_room.complete_task(name)
 	
-	# Go back to idle (no color) for 2 seconds before next task
+	# Brief green flash then go idle
+	await get_tree().create_timer(1.0).timeout
 	current_state = PrinterState.IDLE
 	update_printer_visual()
-	print("Printer idle...")
-	
-	# Wait 2 seconds then start new task
-	await get_tree().create_timer(5.0).timeout
-	start_random_printer_task()
 
 func reset_p_hold():
 	is_holding_p = false
@@ -197,13 +234,60 @@ func update_printer_visual():
 			printer_visual.color = Color.ORANGE
 		PrinterState.COMPLETED:
 			printer_visual.color = Color.GREEN
+			
+func update_visual_state():
+	if current_state == PrinterState.IDLE or current_state == PrinterState.WAITING_FOR_PAPER_PICKUP:
+		# No active task on printer - hide both
+		task_bubble.visible = false
+		instruction_bubble.visible = false
+	else:
+		# Has active task - determine which bubbles to show
+		var task_texture = get_task_bubble_texture()
+		var instruction_texture = get_instruction_bubble_texture()
+		
+		if task_texture:  # Only show if we have a texture
+			task_bubble.texture = task_texture
+			instruction_bubble.texture = instruction_texture
+			
+			if player_nearby:
+				task_bubble.visible = false
+				instruction_bubble.visible = true
+			else:
+				task_bubble.visible = true
+				instruction_bubble.visible = false
+		else:
+			task_bubble.visible = false
+			instruction_bubble.visible = false
+
+func get_task_bubble_texture():
+	match current_state:
+		PrinterState.PAPER_JAM:
+			return bubble_cluster
+		PrinterState.OUT_OF_PAPER, PrinterState.WAITING_FOR_PAPER_RETURN:
+			return bubble_exclamation
+		PrinterState.WAITING_FOR_PAPER_PICKUP:
+			return null  # No bubble on printer when waiting for pickup
+		_:
+			return bubble_exclamation
+
+func get_instruction_bubble_texture():
+	match current_state:
+		PrinterState.PAPER_JAM:
+			return bubble_hold_p
+		PrinterState.OUT_OF_PAPER, PrinterState.WAITING_FOR_PAPER_RETURN:
+			return bubble_press_p
+		_:
+			return bubble_press_p  # Default
 
 func _on_player_entered(body):
 	if body.is_in_group("player"):
 		player_nearby = true
+		update_visual_state()
 		match current_state:
 			PrinterState.OUT_OF_PAPER:
 				print("Press P to refill paper (need paper from shelf)")
+			PrinterState.WAITING_FOR_PAPER_RETURN:  # ADD this case
+				print("Press P to refill printer with paper")
 			PrinterState.PAPER_JAM:
 				print("Hold P to fix paper jam")
 			PrinterState.COMPLETED:
@@ -214,6 +298,7 @@ func _on_player_entered(body):
 func _on_player_exited(body):
 	if body.is_in_group("player"):
 		player_nearby = false
+		update_visual_state()
 		# Reset P key progress if player leaves
 		if is_holding_p:
 			reset_p_hold()

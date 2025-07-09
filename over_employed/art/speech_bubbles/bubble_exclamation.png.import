@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cp60oh38hkb2l"
-path="res://.godot/imported/run_cycle_side_0004s_0004_Layer-31.png-b20363082a543fb26b3d75e96c047934.ctex"
+uid="uid://36tlg5pvmlnt"
+path="res://.godot/imported/bubble_exclamation.png-df0c25e717287dca60157a5ffd1c9db2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://run_cycle_side_0004s_0004_Layer-31.png"
-dest_files=["res://.godot/imported/run_cycle_side_0004s_0004_Layer-31.png-b20363082a543fb26b3d75e96c047934.ctex"]
+source_file="res://art/speech_bubbles/bubble_exclamation.png"
+dest_files=["res://.godot/imported/bubble_exclamation.png-df0c25e717287dca60157a5ffd1c9db2.ctex"]
 
 [params]
 

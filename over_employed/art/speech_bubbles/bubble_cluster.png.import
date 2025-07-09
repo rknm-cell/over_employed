@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://lqjdgdwkk3a7"
-path="res://.godot/imported/run_cycle_side_0002s_0004_Layer-4.png-d7a7c6007e66474131b384c9ac0ddea5.ctex"
+uid="uid://cjfyg5vrc00n7"
+path="res://.godot/imported/bubble_cluster.png-0eb4e870dff646aa9ba2f09528c88c30.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://run_cycle_side_0002s_0004_Layer-4.png"
-dest_files=["res://.godot/imported/run_cycle_side_0002s_0004_Layer-4.png-d7a7c6007e66474131b384c9ac0ddea5.ctex"]
+source_file="res://art/speech_bubbles/bubble_cluster.png"
+dest_files=["res://.godot/imported/bubble_cluster.png-0eb4e870dff646aa9ba2f09528c88c30.ctex"]
 
 [params]
 
