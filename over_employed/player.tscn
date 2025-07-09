@@ -12,10 +12,10 @@
 [ext_resource type="Script" uid="uid://ntdodq1uclvr" path="res://interaction_detector.gd" id="8_dw050"]
 [ext_resource type="Texture2D" uid="uid://d2p7qlgu22r0g" path="res://run_cycle_back_0002s_0002_Layer-29-copy-2.png" id="8_u1c27"]
 [ext_resource type="Texture2D" uid="uid://r84i08qolya1" path="res://run_cycle_back_0002s_0003_Layer-29.png" id="9_op7ga"]
-[ext_resource type="Texture2D" uid="uid://c1osb3xkwxoij" path="res://art/run_cycle_side_0004s_0003_Layer-31-copy.png" id="10_bwjto"]
-[ext_resource type="Texture2D" uid="uid://cper4jcrblaxm" path="res://art/run_cycle_side_0004s_0004_Layer-31.png" id="11_606se"]
-[ext_resource type="Texture2D" uid="uid://k4vjx7kmdm1p" path="res://art/run_cycle_side_0004s_0005_Layer-32-copy.png" id="12_u1c27"]
-[ext_resource type="Texture2D" uid="uid://bylxyjr8d5n7r" path="res://art/run_cycle_side_0004s_0006_Layer-32.png" id="13_op7ga"]
+[ext_resource type="Texture2D" uid="uid://b0huc215825jj" path="res://art/run_cycle/run_side_01.png" id="12_u1c27"]
+[ext_resource type="Texture2D" uid="uid://cmq7ndw20q284" path="res://art/run_cycle/run_side_02.png" id="13_op7ga"]
+[ext_resource type="Texture2D" uid="uid://btt2ehm7ywmmm" path="res://art/run_cycle/run_side_03.png" id="14_q13i1"]
+[ext_resource type="Texture2D" uid="uid://cj3d3ykqipbw6" path="res://art/run_cycle/run_side_04.png" id="15_pylmc"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_dw050"]
 animations = [{
@@ -37,7 +37,7 @@ animations = [{
 "speed": 5.0
 }, {
 "frames": [{
-"duration": 10.0,
+"duration": 5.0,
 "texture": ExtResource("6_u1c27")
 }, {
 "duration": 1.0,
@@ -66,16 +66,16 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("10_bwjto")
-}, {
-"duration": 1.0,
 "texture": ExtResource("12_u1c27")
 }, {
 "duration": 1.0,
-"texture": ExtResource("11_606se")
+"texture": ExtResource("13_op7ga")
 }, {
 "duration": 1.0,
-"texture": ExtResource("13_op7ga")
+"texture": ExtResource("14_q13i1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_pylmc")
 }],
 "loop": true,
 "name": &"walk",
@@ -92,8 +92,8 @@ script = ExtResource("1_sweqy")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(1, 0)
 sprite_frames = SubResource("SpriteFrames_dw050")
-animation = &"idle"
-frame_progress = 0.836415
+animation = &"walk"
+frame_progress = 0.306733
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 1)
