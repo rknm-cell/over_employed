@@ -7,10 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://cqqup1puaxw7l" path="res://run_cycle_side-copy-2_0002s_0002_Layer-24.png" id="5_606se"]
 [ext_resource type="Texture2D" uid="uid://bnor0im2flo8k" path="res://run_cycle_back_0002s_0000_Layer-28-copy-2.png" id="6_bwjto"]
 [ext_resource type="Texture2D" uid="uid://bo3w78xbeuxyc" path="res://run_cycle_back_0002s_0001_Layer-28.png" id="7_606se"]
-
-[ext_resource type="Texture2D" uid="uid://dj8vvhu3msocw" path="res://run_cycle_side_0002s_0005_Layer-3.png" id="7_n7ghd"]
-
-[ext_resource type="Script" uid="uid://ntdodq1uclvr" path="res://interaction_detector.gd" id="8_dw050"]
+[ext_resource type="Script" path="res://interaction_detector.gd" id="8_dw050"]
 [ext_resource type="Texture2D" uid="uid://d2p7qlgu22r0g" path="res://run_cycle_back_0002s_0002_Layer-29-copy-2.png" id="8_u1c27"]
 [ext_resource type="Texture2D" uid="uid://r84i08qolya1" path="res://run_cycle_back_0002s_0003_Layer-29.png" id="9_op7ga"]
 [ext_resource type="Texture2D" uid="uid://c1osb3xkwxoij" path="res://art/run_cycle_side_0004s_0003_Layer-31-copy.png" id="10_bwjto"]
