@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3 uid="uid://b5wof6kvt7pkr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2irj0"]
+size = Vector2(91, 87)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bg6te"]
+size = Vector2(111, 120)
+
+[node name="Coffee" type="Node2D"]
+
+[node name="CoffeeBody" type="StaticBody2D" parent="."]
+
+[node name="CoffeeShape" type="ColorRect" parent="CoffeeBody"]
+offset_right = 78.0
+offset_bottom = 70.0
+color = Color(0.625485, 0.349808, 0.266441, 1)
+
+[node name="CoffeeCollisionShape" type="CollisionShape2D" parent="CoffeeBody"]
+position = Vector2(39.5, 35.5)
+shape = SubResource("RectangleShape2D_2irj0")
+
+[node name="CoffeeArea" type="Area2D" parent="."]
+
+[node name="AreaCollisionShape" type="CollisionShape2D" parent="CoffeeArea"]
+position = Vector2(39.5, 34)
+shape = SubResource("RectangleShape2D_bg6te")

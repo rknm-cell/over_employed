@@ -15,8 +15,8 @@ var has_active_task = false
 @onready var computerOn_sound = preload("res://sounds/computer_start.wav")
 
 # Preload the assets
-@onready var speech_bubble_texture = preload("res://.godot/imported/playerGrey_walk1.png-c4773fe7a7bf85d7ab732eb4458c2742.ctex")
-@onready var instruction_texture = preload("res://.godot/imported/playerGrey_up2.png-d6aba85f5f2675ebc7045efa7552ee79.ctex")
+@onready var speech_bubble_texture = preload("res://art/speech_bubbles/bubble_exclamation.png")
+@onready var instruction_texture = preload("res://art/speech_bubbles/bubble_press_space.png")
 
 func _ready():
 	# Setup audio
