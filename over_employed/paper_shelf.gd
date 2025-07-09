@@ -1,4 +1,4 @@
-# paper_shelf.gd - Attach this to your shelf node
+# paper_shelf.gd - Updated with P key pickup
 extends Node2D
 
 @onready var shelf_visual = $ShelfBody/ShelfVisual  # Your shelf rectangle
@@ -25,8 +25,6 @@ func _ready():
 	game_ui = get_tree().get_first_node_in_group("game_ui")
 	if not game_ui:
 		print("Warning: GameUI not found!")
-	else:
-		game_ui.text_submitted.connect(_on_text_submitted)
 	
 	interaction_area.body_entered.connect(_on_player_entered)
 	interaction_area.body_exited.connect(_on_player_exited)
@@ -40,33 +38,18 @@ func setup_paper_visual():
 	if not paper_visual:
 		paper_visual = ColorRect.new()
 		paper_visual.name = "PaperVisual"
-		add_child(paper_visual)
+		$ShelfBody.add_child(paper_visual)
 	
 	# Make paper smaller than shelf and white
 	var shelf_size = shelf_visual.size if shelf_visual else Vector2(100, 100)
-	paper_visual.size = Vector2(shelf_size.x * 0.6, shelf_size.y * 0.3)
-	paper_visual.position = Vector2(shelf_size.x * 0.2, shelf_size.y * 0.35)
+	paper_visual.size = Vector2(shelf_size.x * 0.4, shelf_size.y * 0.2)  # Smaller rectangle
+	paper_visual.position = Vector2(shelf_size.x * 0.3, shelf_size.y * 0.4)  # Centered better
 	paper_visual.color = Color.WHITE
 
 func _input(event):
-	if event.is_action_pressed("ui_accept") and player_nearby:
-		interact_with_shelf()
-
-func interact_with_shelf():
-	if has_paper:
-		game_ui.show_text_input(self, "Type 'paper' to take paper:")
-	else:
-		print("No paper available on shelf")
-
-func _on_text_submitted(text: String, target: Node):
-	if target != self:
-		return
-	
-	if text == "paper":
+	# Handle P key for paper pickup
+	if event.is_action_pressed("cancel") and player_nearby:  # P key
 		attempt_take_paper()
-	else:
-		print("Unknown command: " + text)
-		play_sound("error")
 
 func attempt_take_paper():
 	if not has_paper:
@@ -103,7 +86,7 @@ func _on_player_entered(body):
 	if body.is_in_group("player"):
 		player_nearby = true
 		if has_paper:
-			print("Press Space to get paper")
+			print("Press P to pick up paper")
 		else:
 			print("Shelf is empty")
 

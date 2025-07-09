@@ -24,6 +24,8 @@ offset_left = 246.0
 offset_top = 17.0
 offset_right = 286.0
 offset_bottom = 57.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
 
 [node name="InteractionArea" type="Area2D" parent="."]
 
