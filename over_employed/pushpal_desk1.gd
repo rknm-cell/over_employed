@@ -37,6 +37,8 @@ func _ready():
 func _input(event):
 	if event.is_action_pressed("ui_accept") and player_nearby and has_active_task:
 		complete_task()
+	if event.is_action_pressed("ui_accept") and player_nearby and has_active_task:
+		complete_task()
 
 func _on_player_entered(body):
 	if body.name == "Player":
