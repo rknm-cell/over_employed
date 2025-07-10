@@ -1,12 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://b2c2aped82lxw"]
+[gd_scene load_steps=6 format=3 uid="uid://b2c2aped82lxw"]
 
 [ext_resource type="Script" uid="uid://bewaw1imrxf8b" path="res://printer.gd" id="1_jhpce"]
+[ext_resource type="Texture2D" uid="uid://ryqsamlrcpoe" path="res://art/static_assets/merged_printer.png" id="2_tnxmo"]
+[ext_resource type="Texture2D" uid="uid://gcb1j1bxbick" path="res://art/static_assets/table_white.png" id="3_vtisp"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_18hgq"]
-size = Vector2(108, 103)
+size = Vector2(367, 469.75)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_syt5x"]
-size = Vector2(121, 115)
+size = Vector2(258, 172.25)
 
 [node name="Printer" type="Node2D"]
 script = ExtResource("1_jhpce")
@@ -22,15 +24,24 @@ offset_bottom = 70.0
 color = Color(0, 0, 0, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PrinterBody"]
-position = Vector2(30, 18.5)
+position = Vector2(83.5, 132.125)
 shape = SubResource("RectangleShape2D_18hgq")
+
+[node name="PrinterSprite" type="Sprite2D" parent="PrinterBody"]
+z_index = 1
+texture = ExtResource("2_tnxmo")
 
 [node name="InteractionArea" type="Area2D" parent="."]
 
 [node name="InteractionCollision" type="CollisionShape2D" parent="InteractionArea"]
-position = Vector2(30.5, 17.5)
+position = Vector2(-44, 31.875)
 shape = SubResource("RectangleShape2D_syt5x")
 
 [node name="TaskBubble" type="Sprite2D" parent="."]
 
 [node name="InstructionBubble" type="Sprite2D" parent="."]
+
+[node name="TableSprite" type="Sprite2D" parent="."]
+position = Vector2(115, 227)
+rotation = -0.0628319
+texture = ExtResource("3_vtisp")

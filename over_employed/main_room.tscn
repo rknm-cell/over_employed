@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://b2c2aped82lxw" path="res://printer.tscn" id="2_77bs5"]
 [ext_resource type="PackedScene" uid="uid://du62ifw2l32gs" path="res://computer.tscn" id="2_vu6j8"]
 [ext_resource type="PackedScene" uid="uid://c1af16b26w2il" path="res://pushpal_desk1.tscn" id="4_a7ayd"]
-[ext_resource type="Script" path="res://pushpal_desk_3.gd" id="5_1oo4e"]
+[ext_resource type="Script" uid="uid://bt7flelvl640a" path="res://pushpal_desk_3.gd" id="5_1oo4e"]
 [ext_resource type="PackedScene" path="res://kitchen.tscn" id="5_ss6w1"]
 [ext_resource type="Script" uid="uid://cav7axe0no0ac" path="res://pushpal_desk_2.gd" id="6_8007g"]
 [ext_resource type="PackedScene" path="res://game_ui.tscn" id="8_bdfba"]
@@ -82,13 +82,14 @@ position = Vector2(760, 1119)
 scale = Vector2(1.2, 1.2)
 
 [node name="PrinterTable" parent="." instance=ExtResource("2_vu6j8")]
-position = Vector2(3385, 1414)
+visible = false
+position = Vector2(4031, 1286)
 rotation = -1.5708
 scale = Vector2(0.7, 0.7)
 
 [node name="Printer" parent="." instance=ExtResource("2_77bs5")]
-position = Vector2(3259, 1770)
-scale = Vector2(2, 2)
+position = Vector2(3204, 1382)
+scale = Vector2(1.17, 1.17)
 
 [node name="PushpalDesk1" parent="." instance=ExtResource("4_a7ayd")]
 position = Vector2(1384, 50)
@@ -153,5 +154,5 @@ disabled = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 z_index = -1
-position = Vector2(1726, 981)
+position = Vector2(1732, 979)
 texture = ExtResource("16_1xp4t")
