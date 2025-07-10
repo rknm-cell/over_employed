@@ -45,6 +45,7 @@ offset_bottom = 60.0
 color = Color(0.545098, 0.270588, 0.0745098, 1)
 
 [node name="Monitor" type="ColorRect" parent="DeskBody"]
+visible = false
 offset_left = 5.0
 offset_top = -20.0
 offset_right = 45.0
@@ -53,7 +54,6 @@ color = Color(0, 0, 0, 1)
 
 [node name="DeskCollision" type="CollisionShape2D" parent="DeskBody"]
 position = Vector2(46.0093, 20)
-scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_t5y75")
 
 [node name="DeskSprite" type="Sprite2D" parent="DeskBody"]
@@ -73,7 +73,6 @@ animation = &"off"
 
 [node name="InteractionCollision" type="CollisionShape2D" parent="InteractionArea"]
 position = Vector2(55.5244, 54.9528)
-scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_se7ci")
 
 [node name="TaskBubble" type="Sprite2D" parent="."]

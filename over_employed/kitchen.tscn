@@ -1,6 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://5svu7qd851nv"]
+[gd_scene load_steps=4 format=3 uid="uid://ck2jhq5nwllm8"]
 
-[ext_resource type="Script" uid="uid://chawrwo4dv2ap" path="res://kitchen.gd" id="1_vloss"]
+[ext_resource type="Script" path="res://kitchen.gd" id="1_vloss"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rbxf2"]
 size = Vector2(1295, 194)

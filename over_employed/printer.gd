@@ -14,6 +14,7 @@ extends Node2D
 @onready var bubble_hold_p = preload("res://art/speech_bubbles/bubble_hold_p.png")
 @onready var bubble_press_p = preload("res://art/speech_bubbles/bubble_press_p.png")
 
+
 # Printer states
 enum PrinterState { 
 	IDLE, 

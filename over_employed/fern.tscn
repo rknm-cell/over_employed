@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://poqqskn6cp0s"]
+
+[ext_resource type="Texture2D" uid="uid://bjf2a0qcldjcy" path="res://art/static_assets/fern.png" id="1_4t5ey"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ovkww"]
+radius = 33.67
+height = 162.0
+
+[node name="Fern" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_4t5ey")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-36, 154)
+scale = Vector2(2.97, 1)
+shape = SubResource("CapsuleShape2D_ovkww")

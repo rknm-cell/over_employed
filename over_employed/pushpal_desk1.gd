@@ -11,7 +11,7 @@ extends Node2D
 var player_nearby = false
 var has_active_task = false
 
-@onready var typing_sound = preload("res://sounds/laptop_typing.wav")
+@onready var typing_sound = preload("res://sounds/laptop_typing2.wav")
 @onready var computerOn_sound = preload("res://sounds/computer_start.wav")
 
 
