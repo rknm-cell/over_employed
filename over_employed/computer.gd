@@ -2,10 +2,7 @@ extends Node2D
 
 @onready var interaction_area = $InteractionArea
 @onready var audio_player = AudioStreamPlayer2D.new()
-
-# New sprite nodes for visual indicators
-@onready var task_bubble = $TaskBubble
-@onready var instruction_bubble = $InstructionBubble
+@onready var speech_bubble = $ComputerBody/SpeechBubbleAnimation
 
 var player_nearby = false
 var has_active_task = false
@@ -22,9 +19,8 @@ func _ready():
 	interaction_area.body_entered.connect(_on_player_entered)
 	interaction_area.body_exited.connect(_on_player_exited)
 	
-	# Hide both initially
-	task_bubble.visible = false
-	instruction_bubble.visible = false
+	# Set speech bubble to default (no animation)
+	speech_bubble.animation = "default"
 
 func _input(event):
 	if event.is_action_pressed("ui_accept") and player_nearby and has_active_task:
@@ -60,7 +56,7 @@ func typing():
 	
 func set_task_active(active: bool):
 	has_active_task = active
-	update_visual_state()  # Add this line
+	update_visual_state()
 	$ComputerBody/ComputerSprite.animation = "on"
 	
 	if active:
@@ -71,14 +67,11 @@ func set_task_active(active: bool):
 func update_visual_state():
 	if has_active_task:
 		if player_nearby:
-			# Show instruction, hide task bubble
-			task_bubble.visible = false
-			instruction_bubble.visible = true
+			# Show press animation when player is nearby
+			speech_bubble.animation = "press"
 		else:
-			# Show task bubble, hide instruction
-			task_bubble.visible = true
-			instruction_bubble.visible = false
+			# Show task animation when task is active but player not nearby
+			speech_bubble.animation = "task"
 	else:
-		# No active task - hide both
-		task_bubble.visible = false
-		instruction_bubble.visible = false 
+		# No active task - show default (no animation)
+		speech_bubble.animation = "default"

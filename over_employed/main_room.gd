@@ -151,9 +151,6 @@ func spawn_initial_tasks():
 	# Spawn one random task at the beginning
 	var random_location = current_task_locations[randi() % current_task_locations.size()]
 	spawn_task_at_location(random_location)
-	
-	for location in initial_locations:
-		spawn_task_at_location(location)
 
 func _on_spawn_cycle():
 	if not is_game_active:
