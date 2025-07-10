@@ -1,28 +1,83 @@
-[gd_scene load_steps=3 format=3 uid="uid://b5tyc4vfw7nph"]
+[gd_scene load_steps=9 format=3 uid="uid://b5tyc4vfw7nph"]
+
+[ext_resource type="Texture2D" uid="uid://dl6wbk55d54ad" path="res://art/coffee/coffee_empty.png" id="1_mc0je"]
+[ext_resource type="Texture2D" uid="uid://bm5v00amgfh5c" path="res://art/coffee/coffee_full.png" id="2_qlwoq"]
+[ext_resource type="Texture2D" uid="uid://cjfyg5vrc00n7" path="res://art/speech_bubbles/bubble_cluster.png" id="3_7jg7l"]
+[ext_resource type="Texture2D" uid="uid://36tlg5pvmlnt" path="res://art/speech_bubbles/bubble_exclamation.png" id="3_qlwoq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2irj0"]
-size = Vector2(91, 87)
+size = Vector2(203, 213)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7jg7l"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_mc0je")
+}],
+"loop": true,
+"name": &"empty",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_qlwoq")
+}],
+"loop": true,
+"name": &"full",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_nufu1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_7jg7l")
+}],
+"loop": true,
+"name": &"Busy",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_qlwoq")
+}],
+"loop": true,
+"name": &"Exclamation",
+"speed": 5.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bg6te"]
-size = Vector2(111, 120)
+size = Vector2(502.5, 308)
 
 [node name="Coffee" type="Node2D"]
 
 [node name="CoffeeBody" type="StaticBody2D" parent="."]
+collision_layer = 0
 
 [node name="CoffeeShape" type="ColorRect" parent="CoffeeBody"]
+visible = false
 offset_right = 78.0
 offset_bottom = 70.0
 color = Color(0.625485, 0.349808, 0.266441, 1)
 
-[node name="CoffeeCollisionShape" type="CollisionShape2D" parent="CoffeeBody"]
-position = Vector2(39.5, 35.5)
+[node name="CoffeeCollision" type="CollisionShape2D" parent="CoffeeBody"]
+position = Vector2(-16.5, -1.5)
 shape = SubResource("RectangleShape2D_2irj0")
 
-[node name="CoffeeArea" type="Area2D" parent="."]
+[node name="CoffeeSprite" type="AnimatedSprite2D" parent="CoffeeBody"]
+sprite_frames = SubResource("SpriteFrames_7jg7l")
+animation = &"full"
 
-[node name="AreaCollisionShape" type="CollisionShape2D" parent="CoffeeArea"]
-position = Vector2(39.5, 34)
+[node name="SpeechBubbles" type="AnimatedSprite2D" parent="CoffeeBody"]
+position = Vector2(35, -182)
+sprite_frames = SubResource("SpriteFrames_nufu1")
+animation = &"Busy"
+
+[node name="CoffeeArea" type="Area2D" parent="."]
+disable_mode = 1
+
+[node name="CoffeeInteractionCollision" type="CollisionShape2D" parent="CoffeeArea"]
+position = Vector2(177, 137)
 shape = SubResource("RectangleShape2D_bg6te")
 
 [node name="TaskBubble" type="Sprite2D" parent="."]

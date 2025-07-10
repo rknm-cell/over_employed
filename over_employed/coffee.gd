@@ -141,6 +141,7 @@ func start_making_coffee():
 	current_state = CoffeeState.BREWING
 	print("Making coffee... this will take 15 seconds")
 	play_sound("brewing")
+	$SpeechBubbles.animation = "Busy"
 	update_coffee_visual()
 	update_visual_state()
 	
@@ -152,6 +153,7 @@ func coffee_finished_brewing():
 	current_state = CoffeeState.READY_TO_DRINK
 	print("Coffee is ready! Come drink it (hold C for 5 seconds)")
 	play_sound("ding")
+	$SpeechBubbles.animation = "Exclamation"
 	update_coffee_visual()
 	update_visual_state()
 
@@ -207,9 +209,10 @@ func update_coffee_visual():
 			coffee_visual.color = Color.GREEN  # Task completed
 
 func _on_player_entered(body):
-	print("Body entered coffee area: ", body.name, " Is player group: ", body.is_in_group("player"))
-	if body.is_in_group("player"):
+	print("Body entered coffee area: ", body.name)
+	if body.name == "Player":  # Use simple name check like kitchen
 		player_nearby = true
+		print("Player can interact with coffee")
 		update_visual_state()
 		match current_state:
 			CoffeeState.READY_TO_MAKE:
@@ -224,8 +227,9 @@ func _on_player_entered(body):
 				print("Coffee task completed!")
 
 func _on_player_exited(body):
-	if body.is_in_group("player"):
+	if body.name == "Player":  # Use simple name check like kitchen
 		player_nearby = false
+		print("Player left coffee area")
 		update_visual_state()
 		# Reset drinking progress if player leaves
 		if is_holding_c:
@@ -237,6 +241,21 @@ func play_sound(sound_name: String):
 		audio_player.play()
 	else:
 		print("Sound not found: ", sound_name)
+
+# Simple activation function like kitchen's activate_monitor()
+func activate_coffee():
+	if current_state == CoffeeState.IDLE:
+		current_state = CoffeeState.READY_TO_MAKE
+		update_coffee_visual()
+		update_visual_state()
+		play_sound("ding")
+		print("Coffee activated!")
+	elif current_state == CoffeeState.READY_TO_MAKE:
+		start_making_coffee()
+	elif current_state == CoffeeState.READY_TO_DRINK:
+		print("Coffee is ready to drink!")
+	else:
+		print("Coffee is not in a state that can be activated")
 		
 func set_task_active(active: bool):
 	if active:
