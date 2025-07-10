@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://b5wof6kvt7pkr"]
+[gd_scene load_steps=3 format=3 uid="uid://b5tyc4vfw7nph"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2irj0"]
 size = Vector2(91, 87)
@@ -24,3 +24,7 @@ shape = SubResource("RectangleShape2D_2irj0")
 [node name="AreaCollisionShape" type="CollisionShape2D" parent="CoffeeArea"]
 position = Vector2(39.5, 34)
 shape = SubResource("RectangleShape2D_bg6te")
+
+[node name="TaskBubble" type="Sprite2D" parent="."]
+
+[node name="InstructionBubble" type="Sprite2D" parent="."]
