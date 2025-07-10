@@ -1,11 +1,15 @@
-[gd_scene load_steps=10 format=3 uid="uid://b2c2aped82lxw"]
+[gd_scene load_steps=15 format=3 uid="uid://b2c2aped82lxw"]
 
 [ext_resource type="Script" uid="uid://bewaw1imrxf8b" path="res://printer.gd" id="1_jhpce"]
 [ext_resource type="Texture2D" uid="uid://ryqsamlrcpoe" path="res://art/static_assets/merged_printer.png" id="2_tnxmo"]
 [ext_resource type="Texture2D" uid="uid://gcb1j1bxbick" path="res://art/static_assets/table_white.png" id="3_vtisp"]
 [ext_resource type="Texture2D" uid="uid://c25whslaocnc8" path="res://art/printer/printer_light_green.png" id="4_light_green"]
 [ext_resource type="Texture2D" uid="uid://0tlrvywclta6" path="res://art/printer/printer_light_red.png" id="5_light_red"]
+[ext_resource type="Texture2D" uid="uid://c7ga5vs2fgguu" path="res://art/speech_bubbles/bubble_hold_p.png" id="6_b87j5"]
 [ext_resource type="Texture2D" uid="uid://c255nb6b34g3c" path="res://art/printer/printer_light_yellow.png" id="6_light_yellow"]
+[ext_resource type="Texture2D" uid="uid://36tlg5pvmlnt" path="res://art/speech_bubbles/bubble_exclamation.png" id="7_r6w1n"]
+[ext_resource type="Texture2D" uid="uid://diebvol2htryl" path="res://art/speech_bubbles/bubble_hold_space.png" id="7_yucjp"]
+[ext_resource type="Texture2D" uid="uid://jyja0pk8m05c" path="res://art/speech_bubbles/bubble_press_space.png" id="8_7y3km"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_18hgq"]
 size = Vector2(367, 469.75)
@@ -42,6 +46,41 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="SpriteFrames" id="SpriteFrames_ibtoc"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_b87j5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_yucjp")
+}],
+"loop": true,
+"name": &"hold",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_7y3km")
+}],
+"loop": true,
+"name": &"press",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_r6w1n")
+}],
+"loop": true,
+"name": &"task",
+"speed": 5.0
+}]
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_syt5x"]
 size = Vector2(258, 172.25)
 
@@ -72,6 +111,12 @@ position = Vector2(-8.52, 39.17)
 sprite_frames = SubResource("SpriteFrames_printer_lights")
 animation = &"off"
 
+[node name="PrinterBubbleAnimation" type="AnimatedSprite2D" parent="PrinterBody"]
+z_index = 1
+position = Vector2(-11, -179)
+sprite_frames = SubResource("SpriteFrames_ibtoc")
+animation = &"task"
+
 [node name="InteractionArea" type="Area2D" parent="."]
 
 [node name="InteractionCollision" type="CollisionShape2D" parent="InteractionArea"]
@@ -83,6 +128,6 @@ shape = SubResource("RectangleShape2D_syt5x")
 [node name="InstructionBubble" type="Sprite2D" parent="."]
 
 [node name="TableSprite" type="Sprite2D" parent="."]
-position = Vector2(115, 227)
+position = Vector2(106, 235)
 rotation = -0.0628319
 texture = ExtResource("3_vtisp")

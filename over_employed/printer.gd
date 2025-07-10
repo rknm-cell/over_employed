@@ -8,12 +8,7 @@ extends Node2D
 # ADD these variables at the top with your other @onready vars:
 @onready var task_bubble = $TaskBubble
 @onready var instruction_bubble = $InstructionBubble
-
-# UPDATE the texture preloads:
-@onready var bubble_cluster = preload("res://art/speech_bubbles/bubble_cluster.png")
-@onready var bubble_exclamation = preload("res://art/speech_bubbles/bubble_exclamation.png") 
-@onready var bubble_hold_p = preload("res://art/speech_bubbles/bubble_hold_p.png")
-@onready var bubble_press_p = preload("res://art/speech_bubbles/bubble_press_p.png")
+@onready var printer_bubble_animation = $PrinterBody/PrinterBubbleAnimation
 
 
 # Printer states
@@ -259,47 +254,26 @@ func update_printer_visual():
 
 func update_visual_state():
 	if current_state == PrinterState.IDLE or current_state == PrinterState.WAITING_FOR_PAPER_PICKUP:
-		# No active task on printer - hide both
-		task_bubble.visible = false
-		instruction_bubble.visible = false
+		# No active task on printer - hide bubble animation
+		printer_bubble_animation.visible = false
 	else:
-		# Has active task - determine which bubbles to show
-		var task_texture = get_task_bubble_texture()
-		var instruction_texture = get_instruction_bubble_texture()
+		# Has active task - show appropriate animation
+		printer_bubble_animation.visible = true
 		
-		if task_texture:  # Only show if we have a texture
-			task_bubble.texture = task_texture
-			instruction_bubble.texture = instruction_texture
-			
-			if player_nearby:
-				task_bubble.visible = false
-				instruction_bubble.visible = true
-			else:
-				task_bubble.visible = true
-				instruction_bubble.visible = false
+		if player_nearby:
+			# Show instruction animation based on state
+			match current_state:
+				PrinterState.PAPER_JAM:
+					printer_bubble_animation.animation = "hold"
+				PrinterState.OUT_OF_PAPER, PrinterState.WAITING_FOR_PAPER_RETURN:
+					printer_bubble_animation.animation = "press"
+				_:
+					printer_bubble_animation.animation = "press"
 		else:
-			task_bubble.visible = false
-			instruction_bubble.visible = false
+			# Show task animation when player is away
+			printer_bubble_animation.animation = "task"
 
-func get_task_bubble_texture():
-	match current_state:
-		PrinterState.PAPER_JAM:
-			return bubble_cluster
-		PrinterState.OUT_OF_PAPER, PrinterState.WAITING_FOR_PAPER_RETURN:
-			return bubble_exclamation
-		PrinterState.WAITING_FOR_PAPER_PICKUP:
-			return null  # No bubble on printer when waiting for pickup
-		_:
-			return bubble_exclamation
 
-func get_instruction_bubble_texture():
-	match current_state:
-		PrinterState.PAPER_JAM:
-			return bubble_hold_p
-		PrinterState.OUT_OF_PAPER, PrinterState.WAITING_FOR_PAPER_RETURN:
-			return bubble_press_p
-		_:
-			return bubble_press_p  # Default
 
 func _on_player_entered(body):
 	if body.is_in_group("player"):
