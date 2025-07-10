@@ -7,6 +7,14 @@ var fail_count = 0
 var max_fails = 3
 var task_counter = 1
 
+# Coffee logic
+var coffee_spawn_timer: Timer
+var coffee_buff_active = false
+var coffee_buff_time_remaining = 0.0
+var coffee_buff_duration = 30.0
+var player_node: CharacterBody2D
+var coffee_location_node: Node2D
+
 # Timers
 @onready var task_spawn_timer = Timer.new()
 
@@ -27,41 +35,20 @@ func _ready():
 	setup_timers()
 	setup_task_locations()
 	
-	print("UI, timers, and task locations setup complete!")
-	print("========================")
+	# Get references to player and coffee
+	player_node = get_tree().get_first_node_in_group("player")
 	
-	# Don't auto-start - wait for player to be ready
-	show_game_start_message()
-
-func show_game_start_message():
-	print("=== GAME START DEBUG ===")
-	print("Showing game start message...")
+	# Try to find coffee node - adjust path as needed
+	coffee_location_node = $Coffee
+	if not coffee_location_node:
+		coffee_location_node = $Kitchen/Coffee  # Try this path
 	
-	# Show a brief "Get Ready!" message
-	var ready_overlay = ColorRect.new()
-	ready_overlay.name = "ReadyOverlay"
-	ready_overlay.color = Color(0, 0, 0, 0.8)
-	ready_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	print("Player found: ", player_node != null)
+	print("Coffee found: ", coffee_location_node != null)
+	if coffee_location_node:
+		print("Coffee node name: ", coffee_location_node.name)
 	
-	var ready_label = Label.new()
-	ready_label.text = "GET READY!\nPress SPACE to start"
-	ready_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	ready_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	ready_label.add_theme_font_size_override("font_size", 48)
-	ready_label.add_theme_color_override("font_color", Color.WHITE)
-	ready_label.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-	
-	ready_overlay.add_child(ready_label)
-	add_child(ready_overlay)
-	
-	print("Ready overlay created, waiting for space key...")
-	
-	# Wait for space key
-	await get_tree().create_timer(0.1).timeout
-	ready_overlay.queue_free()
-	start_game()
-	print("Game started!")
-	print("==================")
+	start_game() 	# Auto-start for testing (remove this later)
 
 func setup_task_locations():
 	# Full list (for later when you add more)
@@ -96,17 +83,39 @@ func setup_timers():
 	add_child(task_spawn_timer)
 	task_spawn_timer.wait_time = 30.0
 	task_spawn_timer.timeout.connect(_on_spawn_cycle)
+	
+	# Coffee spawn timer - triggers at 60 seconds
+	coffee_spawn_timer = Timer.new()
+	add_child(coffee_spawn_timer)
+	coffee_spawn_timer.wait_time = 6.0
+	coffee_spawn_timer.one_shot = true
+	coffee_spawn_timer.timeout.connect(_on_coffee_available)
 
 func _process(delta):
 	if is_game_active:
 		game_time_elapsed += delta
+		
+		# Handle coffee buff countdown
+		if coffee_buff_active:
+			coffee_buff_time_remaining -= delta
+			
+			if coffee_buff_time_remaining <= 0:
+				deactivate_coffee_buff()
+		
 		update_ui()
 
 func update_ui():
 	var minutes = int(game_time_elapsed) / 60
 	var seconds = int(game_time_elapsed) % 60
-	ui_label.text = "Time: %02d:%02d | Tasks: %d | Fails: %d/%d | Score: %d" % [minutes, seconds, task_counter, fail_count, max_fails, score]
-
+	var base_text = "Time: %02d:%02d | Tasks: %d | Fails: %d/%d | Score: %d" % [minutes, seconds, task_counter, fail_count, max_fails, score]
+	
+	# Add coffee buff status if active
+	if coffee_buff_active:
+		var buff_seconds = int(coffee_buff_time_remaining)
+		ui_label.text = base_text + " | ☕ BOOST: %ds" % buff_seconds
+	else:
+		ui_label.text = base_text
+		
 func start_game():
 	print("Starting game...")
 	is_game_active = true
@@ -119,6 +128,8 @@ func start_game():
 	
 	# Start the 30-second cycle timer
 	task_spawn_timer.start()
+	# Start coffee timer
+	coffee_spawn_timer.start()
 	
 func spawn_initial_tasks():
 	# Always spawn at first 2 locations (when we have them)
@@ -245,3 +256,44 @@ func end_game(won: bool):
 		ui_label.text += " - GAME OVER!"
 	
 	print("Game ended. Won: ", won)
+
+func _on_coffee_available():
+	if not is_game_active:
+		return
+	
+	print("60 seconds reached - Coffee is now available!")
+	
+	if coffee_location_node and coffee_location_node.has_method("set_task_active"):
+		coffee_location_node.set_task_active(true)
+	else:
+		print("Error: Coffee node not found or doesn't have set_task_active method")
+		
+func activate_coffee_buff():
+	if coffee_buff_active:
+		print("Coffee buff already active!")
+		return
+	
+	print("Coffee buff activated! 2x speed for 30 seconds!")
+	coffee_buff_active = true
+	coffee_buff_time_remaining = coffee_buff_duration
+	
+	# Double the player's speed
+	if player_node:
+		var old_speed = player_node.speed
+		player_node.speed *= 2
+		print("Player speed increased from ", old_speed, " to ", player_node.speed)
+	else:
+		print("ERROR: Player node not found!")
+		
+func deactivate_coffee_buff():
+	if not coffee_buff_active:
+		return
+	
+	print("Coffee buff expired! Speed back to normal.")
+	coffee_buff_active = false
+	coffee_buff_time_remaining = 0.0
+	
+	# Reset player speed to normal
+	if player_node:
+		player_node.speed /= 2  # Divide by 2 to get back to original speed
+		print("Player speed reset to: ", player_node.speed)
