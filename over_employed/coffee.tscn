@@ -1,9 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://b5tyc4vfw7nph"]
+[gd_scene load_steps=12 format=3 uid="uid://b5tyc4vfw7nph"]
 
 [ext_resource type="Texture2D" uid="uid://dl6wbk55d54ad" path="res://art/coffee/coffee_empty.png" id="1_mc0je"]
 [ext_resource type="Texture2D" uid="uid://bm5v00amgfh5c" path="res://art/coffee/coffee_full.png" id="2_qlwoq"]
+[ext_resource type="Texture2D" uid="uid://e813qaapowq4" path="res://art/coffee/coffee_light_green.png" id="3_6nust"]
 [ext_resource type="Texture2D" uid="uid://cjfyg5vrc00n7" path="res://art/speech_bubbles/bubble_cluster.png" id="3_7jg7l"]
 [ext_resource type="Texture2D" uid="uid://36tlg5pvmlnt" path="res://art/speech_bubbles/bubble_exclamation.png" id="3_qlwoq"]
+[ext_resource type="Texture2D" uid="uid://da4vct1e0hx7d" path="res://art/coffee/coffee_light_red.png" id="4_p6r8i"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2irj0"]
 size = Vector2(203, 213)
@@ -24,6 +26,30 @@ animations = [{
 }],
 "loop": true,
 "name": &"full",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rng45"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_6nust")
+}],
+"loop": true,
+"name": &"green",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_p6r8i")
+}],
+"loop": true,
+"name": &"red",
 "speed": 5.0
 }]
 
@@ -72,6 +98,11 @@ shape = SubResource("RectangleShape2D_2irj0")
 [node name="CoffeeSprite" type="AnimatedSprite2D" parent="CoffeeBody"]
 sprite_frames = SubResource("SpriteFrames_7jg7l")
 animation = &"full"
+
+[node name="CoffeeLight" type="AnimatedSprite2D" parent="CoffeeBody/CoffeeSprite"]
+position = Vector2(63, 16)
+sprite_frames = SubResource("SpriteFrames_rng45")
+animation = &"green"
 
 [node name="SpeechBubbles" type="AnimatedSprite2D" parent="CoffeeBody"]
 position = Vector2(35, -182)
