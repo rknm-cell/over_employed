@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://c1af16b26w2il"]
+[gd_scene load_steps=10 format=3 uid="uid://dvoy7hfnc2nc"]
 
 [ext_resource type="Script" uid="uid://c8jhppjpsk4mf" path="res://pushpal_desk1.gd" id="1_ep8l3"]
 [ext_resource type="Texture2D" uid="uid://gcb1j1bxbick" path="res://art/static_assets/table_white.png" id="2_be8px"]
@@ -53,7 +53,6 @@ color = Color(0, 0, 0, 1)
 
 [node name="DeskCollision" type="CollisionShape2D" parent="DeskBody"]
 position = Vector2(46.0093, 20)
-scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_t5y75")
 
 [node name="DeskSprite" type="Sprite2D" parent="DeskBody"]
@@ -73,7 +72,6 @@ animation = &"off"
 
 [node name="InteractionCollision" type="CollisionShape2D" parent="InteractionArea"]
 position = Vector2(55.5244, 54.9528)
-scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_se7ci")
 
 [node name="TaskBubble" type="Sprite2D" parent="."]
