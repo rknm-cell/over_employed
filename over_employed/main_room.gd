@@ -30,6 +30,9 @@ var score = 0
 var menu_manager: Control
 
 func _ready():
+	print("=== MAIN ROOM DEBUG ===")
+	print("Main room scene loaded!")
+	
 	setup_ui()
 	setup_timers()
 	setup_task_locations()

@@ -45,6 +45,7 @@ offset_bottom = 60.0
 color = Color(0.545098, 0.270588, 0.0745098, 1)
 
 [node name="Monitor" type="ColorRect" parent="DeskBody"]
+visible = false
 offset_left = 5.0
 offset_top = -20.0
 offset_right = 45.0
