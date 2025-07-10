@@ -14,9 +14,6 @@ var has_active_task = false
 @onready var typing_sound = preload("res://sounds/laptop_typing.wav")
 @onready var computerOn_sound = preload("res://sounds/computer_start.wav")
 
-# Preload the assets
-@onready var speech_bubble_texture = preload("res://art/speech_bubbles/bubble_exclamation.png")
-@onready var instruction_texture = preload("res://art/speech_bubbles/bubble_press_space.png")
 
 func _ready():
 	# Setup audio
@@ -26,9 +23,6 @@ func _ready():
 	interaction_area.body_entered.connect(_on_player_entered)
 	interaction_area.body_exited.connect(_on_player_exited)
 	
-	# Setup sprite textures
-	task_bubble.texture = speech_bubble_texture
-	instruction_bubble.texture = instruction_texture
 	
 	# Hide both initially
 	task_bubble.visible = false
@@ -71,6 +65,7 @@ func typing():
 func set_task_active(active: bool):
 	has_active_task = active
 	update_visual_state()  # Add this line
+	$DeskBody/ComputerSprite.animation = "on"
 	
 	if active:
 		print(name, " now has an active task!")

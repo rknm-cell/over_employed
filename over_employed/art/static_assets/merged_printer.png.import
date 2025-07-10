@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://coykp7rdo721l"
-path="res://.godot/imported/run_cycle_side-copy-2_0002s_0000_Layer-24-copy.png-3d4207593a6356d7ee082d2086c8abec.ctex"
+uid="uid://ryqsamlrcpoe"
+path="res://.godot/imported/merged_printer.png-f417d644c6f91985f6552cd560b212cc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://run_cycle_side-copy-2_0002s_0000_Layer-24-copy.png"
-dest_files=["res://.godot/imported/run_cycle_side-copy-2_0002s_0000_Layer-24-copy.png-3d4207593a6356d7ee082d2086c8abec.ctex"]
+source_file="res://art/static_assets/merged_printer.png"
+dest_files=["res://.godot/imported/merged_printer.png-f417d644c6f91985f6552cd560b212cc.ctex"]
 
 [params]
 

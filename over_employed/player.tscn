@@ -5,13 +5,13 @@
 [ext_resource type="Texture2D" uid="uid://3ilvtni7auyh" path="res://art/run_cycle/run_cycle_front_02.png" id="3_606se"]
 [ext_resource type="Texture2D" uid="uid://cdclyilsjt5fj" path="res://art/run_cycle/run_cycle_front_03.png" id="4_u1c27"]
 [ext_resource type="Texture2D" uid="uid://ck7itp3hg8a41" path="res://art/run_cycle/run_cycle_front_04.png" id="5_op7ga"]
-[ext_resource type="Texture2D" uid="uid://bnor0im2flo8k" path="res://run_cycle_back_0002s_0000_Layer-28-copy-2.png" id="6_bwjto"]
 [ext_resource type="Texture2D" uid="uid://8rc7rkw4ayxo" path="res://art/idle/idle_01.png" id="6_u1c27"]
-[ext_resource type="Texture2D" uid="uid://bo3w78xbeuxyc" path="res://run_cycle_back_0002s_0001_Layer-28.png" id="7_606se"]
 [ext_resource type="Texture2D" uid="uid://b3se3uqtsww6t" path="res://art/idle/idle_02.png" id="7_op7ga"]
 [ext_resource type="Script" uid="uid://ntdodq1uclvr" path="res://interaction_detector.gd" id="8_dw050"]
-[ext_resource type="Texture2D" uid="uid://d2p7qlgu22r0g" path="res://run_cycle_back_0002s_0002_Layer-29-copy-2.png" id="8_u1c27"]
-[ext_resource type="Texture2D" uid="uid://r84i08qolya1" path="res://run_cycle_back_0002s_0003_Layer-29.png" id="9_op7ga"]
+[ext_resource type="Texture2D" uid="uid://cbshyqwp88s8i" path="res://art/run_cycle/run_cycle_back_01.png" id="8_u1c27"]
+[ext_resource type="Texture2D" uid="uid://c6vba5dgceap7" path="res://art/run_cycle/run_cycle_back_02.png" id="9_op7ga"]
+[ext_resource type="Texture2D" uid="uid://cd377etmuw8ws" path="res://art/run_cycle/run_cycle_back_03.png" id="10_q13i1"]
+[ext_resource type="Texture2D" uid="uid://cmecw22ycowrc" path="res://art/run_cycle/run_cycle_back_04.png" id="11_pylmc"]
 [ext_resource type="Texture2D" uid="uid://b0huc215825jj" path="res://art/run_cycle/run_side_01.png" id="12_u1c27"]
 [ext_resource type="Texture2D" uid="uid://cmq7ndw20q284" path="res://art/run_cycle/run_side_02.png" id="13_op7ga"]
 [ext_resource type="Texture2D" uid="uid://btt2ehm7ywmmm" path="res://art/run_cycle/run_side_03.png" id="14_q13i1"]
@@ -49,16 +49,16 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("6_bwjto")
-}, {
-"duration": 1.0,
 "texture": ExtResource("8_u1c27")
 }, {
 "duration": 1.0,
-"texture": ExtResource("7_606se")
+"texture": ExtResource("9_op7ga")
 }, {
 "duration": 1.0,
-"texture": ExtResource("9_op7ga")
+"texture": ExtResource("10_q13i1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_pylmc")
 }],
 "loop": true,
 "name": &"up",
@@ -84,7 +84,7 @@ animations = [{
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_b26j0"]
 radius = 114.0
-height = 416.0
+height = 350.617
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_sweqy")
@@ -92,17 +92,18 @@ script = ExtResource("1_sweqy")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(1, 0)
 sprite_frames = SubResource("SpriteFrames_dw050")
-animation = &"walk"
-frame_progress = 0.306733
+animation = &"up"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 1)
+position = Vector2(0, 77)
+scale = Vector2(0.95, 0.81)
 shape = SubResource("CapsuleShape2D_b26j0")
 
 [node name="InteractionDetector" type="Area2D" parent="."]
 script = ExtResource("8_dw050")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionDetector"]
+visible = false
 position = Vector2(1, 4)
 shape = SubResource("CapsuleShape2D_b26j0")
 
