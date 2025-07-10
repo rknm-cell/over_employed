@@ -31,6 +31,8 @@ shape = SubResource("RectangleShape2D_18hgq")
 z_index = 1
 texture = ExtResource("2_tnxmo")
 
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="PrinterBody"]
+
 [node name="InteractionArea" type="Area2D" parent="."]
 
 [node name="InteractionCollision" type="CollisionShape2D" parent="InteractionArea"]

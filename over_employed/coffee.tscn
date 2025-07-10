@@ -44,6 +44,11 @@ animations = [{
 "loop": true,
 "name": &"Exclamation",
 "speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bg6te"]
@@ -71,7 +76,7 @@ animation = &"full"
 [node name="SpeechBubbles" type="AnimatedSprite2D" parent="CoffeeBody"]
 position = Vector2(35, -182)
 sprite_frames = SubResource("SpriteFrames_nufu1")
-animation = &"Busy"
+animation = &"Exclamation"
 
 [node name="CoffeeArea" type="Area2D" parent="."]
 disable_mode = 1

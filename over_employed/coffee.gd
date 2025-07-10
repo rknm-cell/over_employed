@@ -1,19 +1,11 @@
 # coffee.gd - Coffee making mechanics
 extends Node2D
 
-@onready var coffee_visual = $CoffeeBody/CoffeeShape  # Your coffee rectangle
+@onready var coffee_sprite = $CoffeeBody/CoffeeSprite  # Animated coffee sprite
 @onready var coffee_area = $CoffeeArea
 @onready var audio_player = AudioStreamPlayer2D.new()
 
-# Add these bubble references after your existing @onready variables:
-@onready var task_bubble = $TaskBubble
-@onready var instruction_bubble = $InstructionBubble
-
-# Add bubble texture preloads:
-@onready var bubble_exclamation = preload("res://art/speech_bubbles/bubble_exclamation.png")
-@onready var bubble_hold_space = preload("res://art/speech_bubbles/bubble_hold_space.png")
-@onready var bubble_cluster = preload("res://art/speech_bubbles/bubble_cluster.png")
-@onready var bubble_press_space = preload("res://art/speech_bubbles/bubble_press_space.png")
+# Speech bubble animations are handled by the AnimatedSprite2D in the scene
 
 # Coffee states
 enum CoffeeState { IDLE, READY_TO_MAKE, BREWING, READY_TO_DRINK, DRINKING, CONSUMED }
@@ -47,10 +39,9 @@ func _ready():
 	coffee_area.body_entered.connect(_on_player_entered)
 	coffee_area.body_exited.connect(_on_player_exited)
 	
-	# Setup bubble textures and hide them initially
-	task_bubble.visible = false
-	instruction_bubble.visible = false
-	
+	# Start with empty coffee and hide speech bubbles
+	coffee_sprite.animation = "empty"
+	$CoffeeBody/SpeechBubbles.visible = false
 	update_coffee_visual()
 
 func start_coffee_timer():
@@ -141,7 +132,7 @@ func start_making_coffee():
 	current_state = CoffeeState.BREWING
 	print("Making coffee... this will take 15 seconds")
 	play_sound("brewing")
-	$SpeechBubbles.animation = "Busy"
+	$CoffeeBody/SpeechBubbles.animation = "Busy"
 	update_coffee_visual()
 	update_visual_state()
 	
@@ -153,7 +144,6 @@ func coffee_finished_brewing():
 	current_state = CoffeeState.READY_TO_DRINK
 	print("Coffee is ready! Come drink it (hold C for 5 seconds)")
 	play_sound("ding")
-	$SpeechBubbles.animation = "Exclamation"
 	update_coffee_visual()
 	update_visual_state()
 
@@ -171,6 +161,10 @@ func finish_drinking_coffee():
 	play_sound("success")
 	update_coffee_visual()
 	update_visual_state()
+	
+	# Hide speech bubbles after a short delay to show completion
+	var hide_timer = get_tree().create_timer(2.0)
+	hide_timer.timeout.connect(func(): $CoffeeBody/SpeechBubbles.visible = false)
 	
 	# ADD DEBUG: Notify MainRoom to start speed buff
 	var main_room = get_parent()
@@ -196,17 +190,17 @@ func reset_c_hold():
 func update_coffee_visual():
 	match current_state:
 		CoffeeState.IDLE:
-			coffee_visual.color = Color.GRAY  # Neutral
+			coffee_sprite.animation = "empty"  # Empty coffee machine
 		CoffeeState.READY_TO_MAKE:
-			coffee_visual.color = Color.YELLOW  # Ready to start
+			coffee_sprite.animation = "empty"  # Still empty but ready to make
 		CoffeeState.BREWING:
-			coffee_visual.color = Color.ORANGE  # Brewing in progress
+			coffee_sprite.animation = "empty"  # Still empty during brewing
 		CoffeeState.READY_TO_DRINK:
-			coffee_visual.color = Color("#8B4513")  # Brown - coffee ready
+			coffee_sprite.animation = "full"  # Coffee is ready to drink
 		CoffeeState.DRINKING:
-			coffee_visual.color = Color("#D2691E")  # Lighter brown - drinking
+			coffee_sprite.animation = "full"  # Still full while drinking
 		CoffeeState.CONSUMED:
-			coffee_visual.color = Color.GREEN  # Task completed
+			coffee_sprite.animation = "empty"  # Back to empty after drinking
 
 func _on_player_entered(body):
 	print("Body entered coffee area: ", body.name)
@@ -265,52 +259,28 @@ func set_task_active(active: bool):
 		# Reset coffee to idle if needed
 		current_state = CoffeeState.IDLE
 		update_coffee_visual()
+		update_visual_state()
 
 func update_visual_state():
+	var speech_bubbles = $CoffeeBody/SpeechBubbles
+	
 	if current_state == CoffeeState.IDLE:
-		# No active task - hide both bubbles
-		task_bubble.visible = false
-		instruction_bubble.visible = false
+		# No active task - hide speech bubbles
+		speech_bubbles.visible = false
 	else:
-		# Determine which textures to show based on state
-		var task_texture = get_task_bubble_texture()
-		var instruction_texture = get_instruction_bubble_texture()
-		
-		if task_texture:
-			task_bubble.texture = task_texture
+		# Show appropriate speech bubble animation based on state
+		speech_bubbles.visible = true
+		match current_state:
+			CoffeeState.READY_TO_MAKE:
+				speech_bubbles.animation = "Exclamation"
+			CoffeeState.BREWING:
+				speech_bubbles.animation = "Busy"
+			CoffeeState.READY_TO_DRINK:
+				speech_bubbles.animation = "Exclamation"
+			CoffeeState.DRINKING:
+				speech_bubbles.animation = "Busy"
+			CoffeeState.CONSUMED:
+				speech_bubbles.animation = "Exclamation"
+			_:
+				speech_bubbles.visible = false
 			
-			if player_nearby and instruction_texture:  # Only show instruction if we have a texture
-				# Player is nearby AND we have an instruction - show instruction, hide task bubble
-				task_bubble.visible = false
-				instruction_bubble.texture = instruction_texture
-				instruction_bubble.visible = true
-			else:
-				# Player not nearby OR no instruction available - show task bubble, hide instruction
-				task_bubble.visible = true
-				instruction_bubble.visible = false
-		else:
-			# No texture - hide both
-			task_bubble.visible = false
-			instruction_bubble.visible = false
-			
-func get_task_bubble_texture():
-	match current_state:
-		CoffeeState.READY_TO_MAKE:
-			return bubble_exclamation
-		CoffeeState.BREWING:
-			return bubble_cluster
-		CoffeeState.READY_TO_DRINK:
-			return bubble_exclamation
-		_:
-			return null
-
-func get_instruction_bubble_texture():
-	match current_state:
-		CoffeeState.READY_TO_MAKE:
-			return bubble_press_space
-		CoffeeState.BREWING:
-			return null # No instruction during brewing
-		CoffeeState.READY_TO_DRINK:
-			return bubble_hold_space
-		_:
-			return bubble_hold_space
