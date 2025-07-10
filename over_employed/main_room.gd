@@ -20,10 +20,48 @@ var score = 0
 
 
 func _ready():
+	print("=== MAIN ROOM DEBUG ===")
+	print("Main room scene loaded!")
+	
 	setup_ui()
 	setup_timers()
 	setup_task_locations()
-	start_game() 	# Auto-start for testing (remove this later)
+	
+	print("UI, timers, and task locations setup complete!")
+	print("========================")
+	
+	# Don't auto-start - wait for player to be ready
+	show_game_start_message()
+
+func show_game_start_message():
+	print("=== GAME START DEBUG ===")
+	print("Showing game start message...")
+	
+	# Show a brief "Get Ready!" message
+	var ready_overlay = ColorRect.new()
+	ready_overlay.name = "ReadyOverlay"
+	ready_overlay.color = Color(0, 0, 0, 0.8)
+	ready_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	
+	var ready_label = Label.new()
+	ready_label.text = "GET READY!\nPress SPACE to start"
+	ready_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	ready_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	ready_label.add_theme_font_size_override("font_size", 48)
+	ready_label.add_theme_color_override("font_color", Color.WHITE)
+	ready_label.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	
+	ready_overlay.add_child(ready_label)
+	add_child(ready_overlay)
+	
+	print("Ready overlay created, waiting for space key...")
+	
+	# Wait for space key
+	await get_tree().create_timer(0.1).timeout
+	ready_overlay.queue_free()
+	start_game()
+	print("Game started!")
+	print("==================")
 
 func setup_task_locations():
 	# Full list (for later when you add more)
