@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://diebvol2htryl"
-path="res://.godot/imported/bubble_hold_space.png-4fe0857e76a481787b8888a5fa8287be.ctex"
+uid="uid://gcb1j1bxbick"
+path="res://.godot/imported/table_white.png-1354e11c3151586ccfb3c28bad38cf84.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/speech_bubbles/bubble_hold_space.png"
-dest_files=["res://.godot/imported/bubble_hold_space.png-4fe0857e76a481787b8888a5fa8287be.ctex"]
+source_file="res://art/static_assets/table_white.png"
+dest_files=["res://.godot/imported/table_white.png-1354e11c3151586ccfb3c28bad38cf84.ctex"]
 
 [params]
 

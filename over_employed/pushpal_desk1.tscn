@@ -1,12 +1,36 @@
-[gd_scene load_steps=4 format=3 uid="uid://dvoy7hfnc2nc"]
+[gd_scene load_steps=10 format=3 uid="uid://c1af16b26w2il"]
 
 [ext_resource type="Script" uid="uid://c8jhppjpsk4mf" path="res://pushpal_desk1.gd" id="1_ep8l3"]
+[ext_resource type="Texture2D" uid="uid://gcb1j1bxbick" path="res://art/static_assets/table_white.png" id="2_be8px"]
+[ext_resource type="Texture2D" uid="uid://36tlg5pvmlnt" path="res://art/speech_bubbles/bubble_exclamation.png" id="2_hdmwe"]
+[ext_resource type="Texture2D" uid="uid://630awjb6iqhu" path="res://art/computer/computer_side_on.png" id="3_jae8e"]
+[ext_resource type="Texture2D" uid="uid://jyja0pk8m05c" path="res://art/speech_bubbles/bubble_press_space.png" id="3_yaucj"]
+[ext_resource type="Texture2D" uid="uid://bp3ulp0p6abug" path="res://art/computer/computer_side_off.png" id="4_1bcfk"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_t5y75"]
-size = Vector2(120, 80)
+size = Vector2(92.0187, 80)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_t55r8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_jae8e")
+}],
+"loop": true,
+"name": &"off",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_1bcfk")
+}],
+"loop": true,
+"name": &"on",
+"speed": 5.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_se7ci"]
-size = Vector2(138.5, 90.5)
+size = Vector2(71.0065, 58.0032)
 
 [node name="Desk" type="Node2D"]
 rotation = 1.57161
@@ -15,6 +39,7 @@ script = ExtResource("1_ep8l3")
 [node name="DeskBody" type="StaticBody2D" parent="."]
 
 [node name="DeskVisual" type="ColorRect" parent="DeskBody"]
+visible = false
 offset_right = 120.0
 offset_bottom = 60.0
 color = Color(0.545098, 0.270588, 0.0745098, 1)
@@ -27,15 +52,38 @@ offset_bottom = 10.0
 color = Color(0, 0, 0, 1)
 
 [node name="DeskCollision" type="CollisionShape2D" parent="DeskBody"]
-position = Vector2(60, 20)
+position = Vector2(46.0093, 20)
+scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_t5y75")
+
+[node name="DeskSprite" type="Sprite2D" parent="DeskBody"]
+position = Vector2(69.0179, 21.9439)
+rotation = -1.5708
+scale = Vector2(0.19, 0.19)
+texture = ExtResource("2_be8px")
+
+[node name="ComputerSprite" type="AnimatedSprite2D" parent="DeskBody"]
+position = Vector2(57.0187, 22.9536)
+rotation = -1.5708
+scale = Vector2(0.22, 0.22)
+sprite_frames = SubResource("SpriteFrames_t55r8")
+animation = &"off"
 
 [node name="InteractionArea" type="Area2D" parent="."]
 
 [node name="InteractionCollision" type="CollisionShape2D" parent="InteractionArea"]
-position = Vector2(60.25, 25.25)
+position = Vector2(55.5244, 54.9528)
+scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_se7ci")
 
 [node name="TaskBubble" type="Sprite2D" parent="."]
+position = Vector2(19.0138, 16.9845)
+rotation = -1.5708
+scale = Vector2(0.22, 0.22)
+texture = ExtResource("2_hdmwe")
 
 [node name="InstructionBubble" type="Sprite2D" parent="."]
+position = Vector2(17.0163, 19.9862)
+rotation = -1.5708
+scale = Vector2(0.22, 0.22)
+texture = ExtResource("3_yaucj")
