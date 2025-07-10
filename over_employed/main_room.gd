@@ -54,21 +54,25 @@ func setup_task_locations():
 	# Full list (for later when you add more)
 	all_task_locations = [
 		$PushpalDesk1,
-		$PushpalDesk2,  # Add back later
+		$PushpalDesk2,
+		$PushpalDesk3,
 		$Printer,
-		# $Computer,
-		# $Computer2, 
+		$Computer,
+		$Computer2, 
 		# $Kitchen
 	]
 	
-	# For now, just use what we have
+	# Use all three pushpal desks plus printer and computers
 	current_task_locations = [
 		$PushpalDesk1,
+		$PushpalDesk2,
+		$PushpalDesk3,
 		$Printer,
-		# AddPushpalDesk2 when ready
+		$Computer,
+		$Computer2,
 	]
 	
-	print("Using ", current_task_locations.size(), " task locations for now")
+	print("Using ", current_task_locations.size(), " task locations: all three pushpal desks + printer")
 	
 func setup_ui():
 	# Create a simple UI label
@@ -79,9 +83,9 @@ func setup_ui():
 	update_ui()
 
 func setup_timers():
-	# Task spawn timer - triggers every 30 seconds after initial spawn
+	# Task spawn timer - triggers every 5 seconds after initial spawn
 	add_child(task_spawn_timer)
-	task_spawn_timer.wait_time = 30.0
+	task_spawn_timer.wait_time = 5.0
 	task_spawn_timer.timeout.connect(_on_spawn_cycle)
 	
 	# Coffee spawn timer - triggers at 60 seconds
@@ -121,31 +125,29 @@ func start_game():
 	is_game_active = true
 	fail_count = 0
 	game_time_elapsed = 0.0
-	task_counter = 2
+	task_counter = 1
 	
-	# Initial spawn: Always PushpalDesk1 + PushpalDesk2
+	# Initial spawn: One random task
 	spawn_initial_tasks()
 	
-	# Start the 30-second cycle timer
+	# Start the 5-second cycle timer
 	task_spawn_timer.start()
 	# Start coffee timer
 	coffee_spawn_timer.start()
 	
 func spawn_initial_tasks():
-	# Always spawn at first 2 locations (when we have them)
-	var initial_locations = current_task_locations.slice(0, min(2, current_task_locations.size()))
+	# Spawn one random task at the beginning
+	var random_location = current_task_locations[randi() % current_task_locations.size()]
+	spawn_task_at_location(random_location)
 	
-	for location in initial_locations:
-		spawn_task_at_location(location)
-	
-	print("Initial tasks spawned at ", initial_locations.size(), " locations")
+	print("Initial task spawned at: ", random_location.name)
 
 func _on_spawn_cycle():
 	if not is_game_active:
 		return
 	
 	task_counter += 1
-	print("30-second cycle! Task counter now: ", task_counter)
+	print("5-second cycle! Task counter now: ", task_counter)
 	
 	# Spawn 1 more random task at an inactive location
 	spawn_random_task()

@@ -151,5 +151,5 @@ disabled = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 z_index = -1
-position = Vector2(1734.56, 981.564)
+position = Vector2(1735.84, 984.128)
 texture = ExtResource("16_1xp4t")

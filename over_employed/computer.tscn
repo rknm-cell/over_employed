@@ -1,15 +1,14 @@
-[gd_scene load_steps=8 format=3 uid="uid://du62ifw2l32gs"]
+[gd_scene load_steps=10 format=3 uid="uid://du62ifw2l32gs"]
 
 [ext_resource type="Script" uid="uid://c4jl4ifhhr4jd" path="res://computer.gd" id="1_vu6j8"]
 [ext_resource type="Texture2D" uid="uid://dryjbtnssjp8v" path="res://art/static_assets/table_brown.png" id="2_jr5mb"]
 [ext_resource type="Texture2D" uid="uid://8fd30ouqujeo" path="res://art/computer/computer_front_off.png" id="3_4xfga"]
 [ext_resource type="Texture2D" uid="uid://bua8wc8v8q4pp" path="res://art/computer/computer_front_on.png" id="4_wy26k"]
+[ext_resource type="Texture2D" uid="uid://36tlg5pvmlnt" path="res://art/speech_bubbles/bubble_exclamation.png" id="5_bubble_exclamation"]
+[ext_resource type="Texture2D" uid="uid://jyja0pk8m05c" path="res://art/speech_bubbles/bubble_press_space.png" id="6_bubble_press_space"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4q3hy"]
 size = Vector2(748, 310)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_inter"]
-size = Vector2(372, 240)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_k1uhn"]
 animations = [{
@@ -30,18 +29,29 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Computer" type="StaticBody2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_inter"]
+size = Vector2(372, 240)
+
+[node name="Computer" type="Node2D"]
 scale = Vector2(0.65, 0.65)
 script = ExtResource("1_vu6j8")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="ComputerBody" type="StaticBody2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="ComputerBody"]
 position = Vector2(65.9603, 7.21)
 scale = Vector2(1.09226, 0.976391)
 texture = ExtResource("2_jr5mb")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ComputerBody"]
 position = Vector2(60, -17)
 shape = SubResource("RectangleShape2D_4q3hy")
+
+[node name="ComputerSprite" type="AnimatedSprite2D" parent="ComputerBody"]
+position = Vector2(48, -26.5)
+scale = Vector2(1, 1.18132)
+sprite_frames = SubResource("SpriteFrames_k1uhn")
+animation = &"off"
 
 [node name="InteractionArea" type="Area2D" parent="."]
 
@@ -49,11 +59,12 @@ shape = SubResource("RectangleShape2D_4q3hy")
 position = Vector2(50, 134)
 shape = SubResource("RectangleShape2D_inter")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-position = Vector2(48, -26.5)
-scale = Vector2(1, 1.18132)
-sprite_frames = SubResource("SpriteFrames_k1uhn")
-animation = &"off"
+[node name="TaskBubble" type="Sprite2D" parent="."]
+position = Vector2(48, -80)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("5_bubble_exclamation")
 
-[connection signal="body_entered" from="InteractionArea" to="." method="_on_body_entered"]
-[connection signal="body_exited" from="InteractionArea" to="." method="_on_body_exited"]
+[node name="InstructionBubble" type="Sprite2D" parent="."]
+position = Vector2(48, -80)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("6_bubble_press_space")
