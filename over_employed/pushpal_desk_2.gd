@@ -1,6 +1,5 @@
 extends Node2D
 
-@onready var monitor = $DeskBody/Monitor
 @onready var interaction_area = $InteractionArea
 @onready var audio_player = AudioStreamPlayer2D.new()
 

@@ -57,17 +57,19 @@ func setup_task_locations():
 		$PushpalDesk2,
 		$PushpalDesk3,
 		$Printer,
-		# $Computer,
-		# $Computer2, 
+		$Computer,
+		$Computer2, 
 		# $Kitchen
 	]
 	
-	# Use all three pushpal desks plus printer
+	# Use all three pushpal desks plus printer and computers
 	current_task_locations = [
 		$PushpalDesk1,
 		$PushpalDesk2,
 		$PushpalDesk3,
 		$Printer,
+		$Computer,
+		$Computer2,
 	]
 	
 	print("Using ", current_task_locations.size(), " task locations: all three pushpal desks + printer")
@@ -123,9 +125,9 @@ func start_game():
 	is_game_active = true
 	fail_count = 0
 	game_time_elapsed = 0.0
-	task_counter = 2
+	task_counter = 1
 	
-	# Initial spawn: Always PushpalDesk1 + PushpalDesk2 + PushpalDesk3
+	# Initial spawn: One random task
 	spawn_initial_tasks()
 	
 	# Start the 5-second cycle timer
@@ -134,13 +136,11 @@ func start_game():
 	coffee_spawn_timer.start()
 	
 func spawn_initial_tasks():
-	# Always spawn at first 3 locations (all three pushpal desks)
-	var initial_locations = current_task_locations.slice(0, min(3, current_task_locations.size()))
+	# Spawn one random task at the beginning
+	var random_location = current_task_locations[randi() % current_task_locations.size()]
+	spawn_task_at_location(random_location)
 	
-	for location in initial_locations:
-		spawn_task_at_location(location)
-	
-	print("Initial tasks spawned at ", initial_locations.size(), " locations")
+	print("Initial task spawned at: ", random_location.name)
 
 func _on_spawn_cycle():
 	if not is_game_active:
