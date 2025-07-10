@@ -30,9 +30,6 @@ var score = 0
 var menu_manager: Control
 
 func _ready():
-	print("=== MAIN ROOM DEBUG ===")
-	print("Main room scene loaded!")
-	
 	setup_ui()
 	setup_timers()
 	setup_task_locations()
@@ -47,11 +44,6 @@ func _ready():
 	coffee_location_node = $Coffee
 	if not coffee_location_node:
 		coffee_location_node = $Kitchen/Coffee  # Try this path
-	
-	print("Player found: ", player_node != null)
-	print("Coffee found: ", coffee_location_node != null)
-	if coffee_location_node:
-		print("Coffee node name: ", coffee_location_node.name)
 	
 	# Setup menus instead of auto-starting
 	setup_menu_manager()
@@ -88,8 +80,6 @@ func setup_task_locations():
 		$Printer,
 		# AddPushpalDesk2 when ready
 	]
-	
-	print("Using ", current_task_locations.size(), " task locations for now")
 	
 func setup_ui():
 	# Create a simple UI label
@@ -138,7 +128,6 @@ func update_ui():
 		ui_label.text = base_text
 		
 func start_game():
-	print("Starting game...")
 	is_game_active = true
 	fail_count = 0
 	game_time_elapsed = 0.0
@@ -158,15 +147,12 @@ func spawn_initial_tasks():
 	
 	for location in initial_locations:
 		spawn_task_at_location(location)
-	
-	print("Initial tasks spawned at ", initial_locations.size(), " locations")
 
 func _on_spawn_cycle():
 	if not is_game_active:
 		return
 	
 	task_counter += 1
-	print("30-second cycle! Task counter now: ", task_counter)
 	
 	# Spawn 1 more random task at an inactive location
 	spawn_random_task()
@@ -179,7 +165,6 @@ func spawn_random_task():
 			available_locations.append(location)
 	
 	if available_locations.size() == 0:
-		print("All locations are active!")
 		return
 	
 	var chosen_location = available_locations[randi() % available_locations.size()]
@@ -187,7 +172,6 @@ func spawn_random_task():
 	
 func spawn_task_at_location(location_node):
 	var task_name = location_node.name
-	print("Spawning task at: ", task_name)
 	
 	# Create a timer for this specific task
 	var task_timer = Timer.new()
@@ -207,11 +191,7 @@ func spawn_task_at_location(location_node):
 	if location_node.has_method("set_task_active"):
 		location_node.set_task_active(true)
 	
-	print("Task active at ", task_name, " - 15 seconds to complete!")
-	
 func _on_task_failed(task_name: String):
-	print("Task FAILED at: ", task_name)
-	
 	# Clean up the failed task
 	if task_name in active_tasks:
 		var location_node = active_tasks[task_name].location
@@ -229,8 +209,6 @@ func _on_task_failed(task_name: String):
 # Update your complete_task function:
 func complete_task(task_name: String):
 	if task_name in active_tasks:
-		print("Task COMPLETED at: ", task_name)
-		
 		var location_node = active_tasks[task_name].location
 		
 		# Reset visual indicator
@@ -244,15 +222,12 @@ func complete_task(task_name: String):
 		
 		# Add points
 		score += 10
-		print("Score: ", score)
 	
 func _on_game_won():
-	print("YOU WIN! Survived 3 minutes!")
 	end_game(true)
 
 func add_fail():
 	fail_count += 1
-	print("Task failed! Fails: ", fail_count, "/", max_fails)
 	
 	update_ui()    # Update UI immediately to show the new fail count
 	
@@ -274,14 +249,10 @@ func end_game(won: bool):
 	# Show game over menu instead of just updating UI
 	if menu_manager:
 		menu_manager.show_game_over_menu(won, score, game_time_elapsed)
-	
-	print("Game ended. Won: ", won)
 
 func _on_coffee_available():
 	if not is_game_active:
 		return
-	
-	print("60 seconds reached - Coffee is now available!")
 	
 	if coffee_location_node and coffee_location_node.has_method("set_task_active"):
 		coffee_location_node.set_task_active(true)
@@ -290,10 +261,8 @@ func _on_coffee_available():
 		
 func activate_coffee_buff():
 	if coffee_buff_active:
-		print("Coffee buff already active!")
 		return
 	
-	print("Coffee buff activated! 2x speed for 30 seconds!")
 	coffee_buff_active = true
 	coffee_buff_time_remaining = coffee_buff_duration
 	
@@ -301,7 +270,6 @@ func activate_coffee_buff():
 	if player_node:
 		var old_speed = player_node.speed
 		player_node.speed *= 2
-		print("Player speed increased from ", old_speed, " to ", player_node.speed)
 	else:
 		print("ERROR: Player node not found!")
 		
@@ -309,29 +277,26 @@ func deactivate_coffee_buff():
 	if not coffee_buff_active:
 		return
 	
-	print("Coffee buff expired! Speed back to normal.")
 	coffee_buff_active = false
 	coffee_buff_time_remaining = 0.0
 	
 	# Reset player speed to normal
 	if player_node:
 		player_node.speed /= 2  # Divide by 2 to get back to original speed
-		print("Player speed reset to: ", player_node.speed)
 		
 # Signal handlers for menu manager
 func _on_start_game_requested():
-	print("Starting new game...")
 	start_game()
 
 func _on_restart_game_requested():
-	print("Restarting game...")
 	reset_game()
 	start_game()
 
 func _on_resume_game_requested():
-	print("Resuming game...")
+	pass
 
 # New function to reset game state
+# In main_room.gd, update the reset_game function:
 func reset_game():
 	# Stop all timers
 	task_spawn_timer.stop()
@@ -359,11 +324,14 @@ func reset_game():
 		if coffee_location_node.has_method("reset_coffee_system"):
 			coffee_location_node.reset_coffee_system()
 	
+	# ADD THIS: Reset player position to starting position
+	if player_node:
+		# You can adjust these coordinates to wherever you want the player to start
+		player_node.position = Vector2(500, 300)  # Change these to your desired starting position
+	
 	# Reset game variables
 	game_time_elapsed = 0.0
 	fail_count = 0
 	task_counter = 1
 	score = 0
 	is_game_active = false
-	
-	print("Game reset complete")

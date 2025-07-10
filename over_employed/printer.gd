@@ -50,8 +50,6 @@ func _ready():
 	
 	# Find the GameUI node
 	game_ui = get_tree().get_first_node_in_group("game_ui")
-	if not game_ui:
-		print("Warning: GameUI not found!")
 	
 	interaction_area.body_entered.connect(_on_player_entered)
 	interaction_area.body_exited.connect(_on_player_exited)
@@ -66,12 +64,10 @@ func _ready():
 func set_task_active(active: bool):
 	if active:
 		start_random_printer_task()
-		print("Printer task activated by MainRoom")
 	else:
 		# Reset printer to idle when task fails/completes
 		current_state = PrinterState.IDLE
 		update_printer_visual()
-		print("Printer task deactivated")
 	update_visual_state()
 
 func start_random_printer_task():
@@ -82,11 +78,9 @@ func start_random_printer_task():
 		0:  # Out of paper
 			current_state = PrinterState.OUT_OF_PAPER
 			play_sound("error")
-			print("Printer out of paper!")
 		1:  # Paper jam
 			current_state = PrinterState.PAPER_JAM
 			play_sound("error")
-			print("Paper jam!")
 	
 	update_printer_visual()
 	update_visual_state()
@@ -107,7 +101,6 @@ func _process(delta):
 				# Start holding P
 				is_holding_p = true
 				p_hold_time = 0.0
-				print("Hold P to fix paper jam...")
 				game_ui.show_progress_bar(p_hold_duration, "Fixing paper jam (hold P)...")
 			
 			# Update hold time
@@ -133,16 +126,15 @@ func handle_p_key_press():
 		PrinterState.WAITING_FOR_PAPER_RETURN:
 			attempt_refill_paper()
 		PrinterState.PAPER_JAM:
-			print("Hold P to fix paper jam")
+			pass
 		PrinterState.IDLE:
-			print("Printer is idle - no task active")
+			pass
 		_:
-			print("Printer doesn't need fixing")
+			pass
 
 func attempt_refill_paper():
 	if not game_ui.has_item("paper"):
 		# Player doesn't have paper - need to go get it from shelf
-		print("You need paper from the shelf!")
 		current_state = PrinterState.WAITING_FOR_PAPER_PICKUP
 		
 		# Activate the paper shelf
@@ -158,7 +150,6 @@ func attempt_refill_paper():
 
 func refill_paper():
 	current_state = PrinterState.FIXING
-	print("Refilling printer with paper...")
 	
 	# Remove paper from inventory
 	game_ui.remove_from_inventory("paper")
@@ -179,7 +170,6 @@ func refill_paper():
 func fix_paper_jam():
 	fixing_paper_jam = true
 	current_state = PrinterState.FIXING
-	print("Paper jam cleared!")
 	
 	# Reset P key variables
 	is_holding_p = false
@@ -201,7 +191,6 @@ func fix_paper_jam():
 func complete_task():
 	current_state = PrinterState.COMPLETED
 	play_sound("success")
-	print("Printer task completed!")
 	update_printer_visual()
 	
 	# Notify MainRoom task is complete
@@ -221,7 +210,6 @@ func reset_p_hold():
 	p_hold_time = 0.0
 	if game_ui and game_ui.progress_bar.visible:
 		game_ui.hide_progress_bar()
-	print("Released P key - progress reset")
 
 func flash_printer_color():
 	var original_animation = printer_light.animation
@@ -305,17 +293,6 @@ func _on_player_entered(body):
 	if body.is_in_group("player"):
 		player_nearby = true
 		update_visual_state()
-		match current_state:
-			PrinterState.OUT_OF_PAPER:
-				print("Press P to refill paper (need paper from shelf)")
-			PrinterState.WAITING_FOR_PAPER_RETURN:  # ADD this case
-				print("Press P to refill printer with paper")
-			PrinterState.PAPER_JAM:
-				print("Hold P to fix paper jam")
-			PrinterState.COMPLETED:
-				print("Task completed!")
-			PrinterState.IDLE:
-				print("Printer is idle")
 
 func _on_player_exited(body):
 	if body.is_in_group("player"):
@@ -329,5 +306,3 @@ func play_sound(sound_name: String):
 	if sounds.has(sound_name):
 		audio_player.stream = sounds[sound_name]
 		audio_player.play()
-	else:
-		print("Sound not found: ", sound_name)

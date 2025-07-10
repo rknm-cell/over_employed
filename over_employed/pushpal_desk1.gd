@@ -1,3 +1,4 @@
+# pushpal_desk1.gd
 extends Node2D
 
 @onready var monitor = $DeskBody/Monitor
@@ -38,16 +39,13 @@ func _on_player_entered(body):
 	if body.name == "Player":
 		player_nearby = true
 		update_visual_state()
-		print("Player can interact with desk")
 
 func _on_player_exited(body):
 	if body.name == "Player":
 		player_nearby = false
 		update_visual_state()
-		print("Player left desk area")
 
 func complete_task():
-	print("Completing task at ", name)
 	computerOn()
 	typing()
 	
@@ -66,11 +64,6 @@ func set_task_active(active: bool):
 	has_active_task = active
 	update_visual_state()  # Add this line
 	$DeskBody/ComputerSprite.animation = "on"
-	
-	if active:
-		print(name, " now has an active task!")
-	else:
-		print(name, " task cleared")
 
 func update_visual_state():
 	if has_active_task:

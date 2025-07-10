@@ -34,8 +34,6 @@ func _ready():
 	
 	# Find the GameUI node
 	game_ui = get_tree().get_first_node_in_group("game_ui")
-	if not game_ui:
-		print("Warning: GameUI not found!")
 	
 	coffee_area.body_entered.connect(_on_player_entered)
 	coffee_area.body_exited.connect(_on_player_exited)
@@ -47,20 +45,17 @@ func _ready():
 	update_coffee_visual()
 
 func start_coffee_timer():
-	print("Coffee will be ready in 1 minute...")
 	initial_ding_timer = get_tree().create_timer(5.0)  # 1 minute
 	initial_ding_timer.timeout.connect(coffee_ready_to_make)
 
 func coffee_ready_to_make():
 	current_state = CoffeeState.READY_TO_MAKE
 	play_sound("ding")
-	print("Coffee is ready to make! Go to coffee area and press C.")
 	update_coffee_visual()
 	update_visual_state()
 
 func _input(event):
 	if event.is_action_pressed("ui_accept") and player_nearby: 
-		print("coffee Key pressed") # C key
 		handle_space_key_press()
 		
 func _process(delta):
@@ -73,13 +68,11 @@ func _process(delta):
 				is_holding_c = true
 				c_hold_time = 0.0
 				current_state = CoffeeState.DRINKING
-				print("Drinking coffee... (hold Space for 5 seconds)")
 				game_ui.show_progress_bar(c_hold_duration, "Drinking coffee (hold Space)...")
 				update_coffee_visual()
 			
 			# Continue drinking (this runs every frame while holding)
 			c_hold_time += delta
-			print("Hold time: ", c_hold_time, " / ", c_hold_duration)
 			
 			# Update progress bar value
 			var progress = (c_hold_time / c_hold_duration) * 100
@@ -88,12 +81,10 @@ func _process(delta):
 			
 			# Check if hold duration is complete
 			if c_hold_time >= c_hold_duration:
-				print("DRINKING COMPLETE! Calling finish_drinking_coffee()")
 				finish_drinking_coffee()
 		else:
 			# Player let go of Space key - reset progress
 			if is_drinking:
-				print("Player released Space key - resetting progress")
 				reset_c_hold()
 	
 	# Also handle the DRINKING state (in case player releases and presses again)
@@ -101,18 +92,15 @@ func _process(delta):
 		if Input.is_action_pressed("ui_accept"):
 			# Continue drinking
 			c_hold_time += delta
-			print("Hold time: ", c_hold_time, " / ", c_hold_duration)
 			
 			var progress = (c_hold_time / c_hold_duration) * 100
 			if game_ui and game_ui.progress_bar.visible:
 				game_ui.progress_bar.value = progress
 			
 			if c_hold_time >= c_hold_duration:
-				print("DRINKING COMPLETE! Calling finish_drinking_coffee()")
 				finish_drinking_coffee()
 		else:
 			# Player let go - reset
-			print("Player released Space key - resetting progress")
 			reset_c_hold()
 
 func handle_space_key_press():
@@ -120,19 +108,18 @@ func handle_space_key_press():
 		CoffeeState.READY_TO_MAKE:
 			start_making_coffee()
 		CoffeeState.BREWING:
-			print("Coffee is still brewing... wait a moment")
+			pass
 		CoffeeState.READY_TO_DRINK:
-			print("Hold Space for 5 seconds to drink coffee")
+			pass
 		CoffeeState.DRINKING:
-			print("Already drinking coffee...")
+			pass
 		CoffeeState.CONSUMED:
-			print("Coffee already consumed")
+			pass
 		_:
-			print("No coffee action available")
+			pass
 
 func start_making_coffee():
 	current_state = CoffeeState.BREWING
-	print("Making coffee... this will take 15 seconds")
 	play_sound("brewing")
 	$CoffeeBody/SpeechBubbles.animation = "Busy"
 	update_coffee_visual()
@@ -144,7 +131,6 @@ func start_making_coffee():
 
 func coffee_finished_brewing():
 	current_state = CoffeeState.READY_TO_DRINK
-	print("Coffee is ready! Come drink it (hold C for 5 seconds)")
 	play_sound("ding")
 	update_coffee_visual()
 	update_visual_state()
@@ -159,7 +145,6 @@ func finish_drinking_coffee():
 	if game_ui:
 		game_ui.hide_progress_bar()
 	
-	print("Coffee consumed! Speed buff activated!")
 	play_sound("success")
 	update_coffee_visual()
 	update_visual_state()
@@ -168,14 +153,10 @@ func finish_drinking_coffee():
 	var hide_timer = get_tree().create_timer(2.0)
 	hide_timer.timeout.connect(func(): $CoffeeBody/SpeechBubbles.visible = false)
 	
-	# ADD DEBUG: Notify MainRoom to start speed buff
+	# Notify MainRoom to start speed buff
 	var main_room = get_parent()
-	print("Main room found: ", main_room != null)
 	if main_room.has_method("activate_coffee_buff"):
-		print("Calling activate_coffee_buff...")
 		main_room.activate_coffee_buff()
-	else:
-		print("ERROR: MainRoom doesn't have activate_coffee_buff method!")
 
 func reset_c_hold():
 	is_holding_c = false
@@ -186,7 +167,6 @@ func reset_c_hold():
 	if game_ui and game_ui.progress_bar.visible:
 		game_ui.hide_progress_bar()
 	
-	print("Released C key - drinking progress reset")
 	update_coffee_visual()
 
 func update_coffee_visual():
@@ -211,27 +191,13 @@ func update_coffee_visual():
 			coffee_light.animation = "default"  # Light off
 
 func _on_player_entered(body):
-	print("Body entered coffee area: ", body.name)
 	if body.name == "Player":  # Use simple name check like kitchen
 		player_nearby = true
-		print("Player can interact with coffee")
 		update_visual_state()
-		match current_state:
-			CoffeeState.READY_TO_MAKE:
-				print("Press Space to start making coffee")
-			CoffeeState.BREWING:
-				print("Coffee is brewing...")
-			CoffeeState.READY_TO_DRINK:
-				print("Hold Space for 5 seconds to drink coffee")
-			CoffeeState.DRINKING:
-				print("Drinking coffee...")
-			CoffeeState.CONSUMED:
-				print("Coffee task completed!")
 
 func _on_player_exited(body):
 	if body.name == "Player":  # Use simple name check like kitchen
 		player_nearby = false
-		print("Player left coffee area")
 		update_visual_state()
 		# Reset drinking progress if player leaves
 		if is_holding_c:
@@ -241,8 +207,6 @@ func play_sound(sound_name: String):
 	if sounds.has(sound_name):
 		audio_player.stream = sounds[sound_name]
 		audio_player.play()
-	else:
-		print("Sound not found: ", sound_name)
 
 # Simple activation function like kitchen's activate_monitor()
 func activate_coffee():
@@ -251,17 +215,13 @@ func activate_coffee():
 		update_coffee_visual()
 		update_visual_state()
 		play_sound("ding")
-		print("Coffee activated!")
 	elif current_state == CoffeeState.READY_TO_MAKE:
 		start_making_coffee()
 	elif current_state == CoffeeState.READY_TO_DRINK:
-		print("Coffee is ready to drink!")
-	else:
-		print("Coffee is not in a state that can be activated")
+		pass
 		
 func set_task_active(active: bool):
 	if active:
-		print("Coffee activated by MainRoom!")
 		coffee_ready_to_make()
 	else:
 		# Reset coffee to idle if needed
@@ -291,4 +251,3 @@ func update_visual_state():
 				speech_bubbles.animation = "Exclamation"
 			_:
 				speech_bubbles.visible = false
-			
