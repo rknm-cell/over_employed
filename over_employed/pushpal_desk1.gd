@@ -1,7 +1,6 @@
 # pushpal_desk1.gd
 extends Node2D
 
-@onready var monitor = $DeskBody/Monitor
 @onready var interaction_area = $InteractionArea
 @onready var audio_player = AudioStreamPlayer2D.new()
 
@@ -30,8 +29,6 @@ func _ready():
 	instruction_bubble.visible = false
 
 func _input(event):
-	if event.is_action_pressed("ui_accept") and player_nearby and has_active_task:
-		complete_task()
 	if event.is_action_pressed("ui_accept") and player_nearby and has_active_task:
 		complete_task()
 
