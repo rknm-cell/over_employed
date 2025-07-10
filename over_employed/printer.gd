@@ -2,6 +2,7 @@
 extends Node2D
 
 @onready var printer_visual = $PrinterBody/PrinterVisual  # Your printer rectangle
+@onready var printer_light = $PrinterBody/PrinterLight  # Printer light indicator
 @onready var interaction_area = $InteractionArea
 @onready var audio_player = AudioStreamPlayer2D.new()
 # ADD these variables at the top with your other @onready vars:
@@ -58,6 +59,9 @@ func _ready():
 	task_bubble.visible = false
 	instruction_bubble.visible = false
 	
+	# Initialize printer light to off state
+	printer_light.animation = "off"
+	
 # ADD this function for MainRoom to call:
 func set_task_active(active: bool):
 	if active:
@@ -86,6 +90,9 @@ func start_random_printer_task():
 	
 	update_printer_visual()
 	update_visual_state()
+	
+	# Flash the light briefly to indicate task start
+	flash_task_start()
 
 func _input(event):
 	# Handle P key press for paper refill (when player has paper)
@@ -201,7 +208,10 @@ func complete_task():
 	var main_room = get_parent()
 	main_room.complete_task(name)
 	
-	# Brief green flash then go idle
+	# Flash the light to show completion
+	flash_printer_color()
+	
+	# Brief delay then go idle
 	await get_tree().create_timer(1.0).timeout
 	current_state = PrinterState.IDLE
 	update_printer_visual()
@@ -214,28 +224,39 @@ func reset_p_hold():
 	print("Released P key - progress reset")
 
 func flash_printer_color():
-	var original_color = printer_visual.color
+	var original_animation = printer_light.animation
 	var flash_count = 6
 	
 	for i in flash_count:
-		printer_visual.color = Color.WHITE
+		printer_light.animation = "green"  # Flash green
 		await get_tree().create_timer(0.1).timeout
-		printer_visual.color = original_color
+		printer_light.animation = original_animation  # Return to original state
 		await get_tree().create_timer(0.1).timeout
+
+func flash_task_start():
+	# Flash red briefly to indicate task start
+	var original_animation = printer_light.animation
+	printer_light.animation = "red"
+	await get_tree().create_timer(0.2).timeout
+	printer_light.animation = original_animation
 
 func update_printer_visual():
 	match current_state:
 		PrinterState.IDLE:
-			printer_visual.color = Color.GRAY  # Neutral color when no task
+			printer_light.animation = "off"  # Light off when idle
 		PrinterState.OUT_OF_PAPER:
-			printer_visual.color = Color.BLUE
+			printer_light.animation = "yellow"  # Yellow light for out of paper
 		PrinterState.PAPER_JAM:
-			printer_visual.color = Color.RED
+			printer_light.animation = "red"  # Red light for paper jam
 		PrinterState.FIXING:
-			printer_visual.color = Color.ORANGE
+			printer_light.animation = "yellow"  # Yellow light while fixing
 		PrinterState.COMPLETED:
-			printer_visual.color = Color.GREEN
-			
+			printer_light.animation = "green"  # Green light when completed
+		PrinterState.WAITING_FOR_PAPER_PICKUP:
+			printer_light.animation = "yellow"  # Yellow light when waiting for paper
+		PrinterState.WAITING_FOR_PAPER_RETURN:
+			printer_light.animation = "yellow"  # Yellow light when waiting for paper return
+
 func update_visual_state():
 	if current_state == PrinterState.IDLE or current_state == PrinterState.WAITING_FOR_PAPER_PICKUP:
 		# No active task on printer - hide both

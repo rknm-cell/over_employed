@@ -2,6 +2,7 @@
 extends Node2D
 
 @onready var coffee_sprite = $CoffeeBody/CoffeeSprite  # Animated coffee sprite
+@onready var coffee_light = $CoffeeBody/CoffeeSprite/CoffeeLight  # Coffee light indicator
 @onready var coffee_area = $CoffeeArea
 @onready var audio_player = AudioStreamPlayer2D.new()
 
@@ -41,6 +42,7 @@ func _ready():
 	
 	# Start with empty coffee and hide speech bubbles
 	coffee_sprite.animation = "empty"
+	coffee_light.animation = "default"  # Light off initially
 	$CoffeeBody/SpeechBubbles.visible = false
 	update_coffee_visual()
 
@@ -191,16 +193,22 @@ func update_coffee_visual():
 	match current_state:
 		CoffeeState.IDLE:
 			coffee_sprite.animation = "empty"  # Empty coffee machine
+			coffee_light.animation = "default"  # Light off
 		CoffeeState.READY_TO_MAKE:
 			coffee_sprite.animation = "empty"  # Still empty but ready to make
+			coffee_light.animation = "default"  # Light off
 		CoffeeState.BREWING:
 			coffee_sprite.animation = "empty"  # Still empty during brewing
+			coffee_light.animation = "red"  # Red light while brewing
 		CoffeeState.READY_TO_DRINK:
 			coffee_sprite.animation = "full"  # Coffee is ready to drink
+			coffee_light.animation = "green"  # Green light when ready
 		CoffeeState.DRINKING:
 			coffee_sprite.animation = "full"  # Still full while drinking
+			coffee_light.animation = "green"  # Keep green while drinking
 		CoffeeState.CONSUMED:
 			coffee_sprite.animation = "empty"  # Back to empty after drinking
+			coffee_light.animation = "default"  # Light off
 
 func _on_player_entered(body):
 	print("Body entered coffee area: ", body.name)
