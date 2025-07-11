@@ -1,4 +1,4 @@
-# coffee.gd - Self-contained coffee system
+# coffee.gd - Self-contained coffee system (PRESS SPACE TO DRINK)
 extends Node2D
 
 @onready var coffee_sprite = $CoffeeBody/CoffeeSprite
@@ -8,15 +8,9 @@ extends Node2D
 @onready var audio_player = AudioStreamPlayer2D.new()
 
 # Coffee states
-enum CoffeeState { IDLE, READY_TO_MAKE, BREWING, READY_TO_DRINK, DRINKING, CONSUMED }
+enum CoffeeState { IDLE, READY_TO_MAKE, BREWING, READY_TO_DRINK, CONSUMED }
 var current_state = CoffeeState.IDLE
 var player_nearby = false
-
-# Drinking variables
-var is_holding_space = false
-var space_hold_time = 0.0
-var space_hold_duration = 5.0
-var is_drinking = false
 
 # Respawn timing
 var respawn_timer: Timer
@@ -76,9 +70,6 @@ func reset_coffee_system():
 	"""Called by main_room when game resets"""
 	current_state = CoffeeState.IDLE
 	player_nearby = false
-	is_holding_space = false
-	space_hold_time = 0.0
-	is_drinking = false
 	
 	# Stop all timers
 	if initial_spawn_timer:
@@ -107,64 +98,16 @@ func _input(event):
 		handle_space_key_press()
 		
 func _process(delta):
-	# Handle holding Space key for drinking coffee
-	if current_state == CoffeeState.READY_TO_DRINK and player_nearby:
-		if Input.is_action_pressed("ui_accept"):
-			if not is_drinking:
-				start_drinking()
-			
-			# Continue drinking
-			space_hold_time += delta
-			update_drinking_progress()
-			
-			# Check if drinking is complete
-			if space_hold_time >= space_hold_duration:
-				finish_drinking_coffee()
-		else:
-			# Player let go of Space key - reset progress
-			if is_drinking:
-				reset_drinking()
-	
-	# Handle DRINKING state (in case player releases and presses again)
-	elif current_state == CoffeeState.DRINKING and player_nearby:
-		if Input.is_action_pressed("ui_accept"):
-			space_hold_time += delta
-			update_drinking_progress()
-			
-			if space_hold_time >= space_hold_duration:
-				finish_drinking_coffee()
-		else:
-			reset_drinking()
-
-func start_drinking():
-	is_drinking = true
-	is_holding_space = true
-	space_hold_time = 0.0
-	current_state = CoffeeState.DRINKING
-	game_ui.show_progress_bar(space_hold_duration, "Drinking coffee (hold Space)...")
-	update_coffee_visual()
-
-func update_drinking_progress():
-	var progress = (space_hold_time / space_hold_duration) * 100
-	if game_ui and game_ui.progress_bar.visible:
-		game_ui.progress_bar.value = progress
-
-func reset_drinking():
-	is_holding_space = false
-	space_hold_time = 0.0
-	is_drinking = false
-	current_state = CoffeeState.READY_TO_DRINK
-	
-	if game_ui and game_ui.progress_bar.visible:
-		game_ui.hide_progress_bar()
-	
-	update_coffee_visual()
+	# No more hold space logic needed!
+	pass
 
 func handle_space_key_press():
 	match current_state:
 		CoffeeState.READY_TO_MAKE:
 			start_making_coffee()
-		CoffeeState.BREWING, CoffeeState.DRINKING, CoffeeState.CONSUMED:
+		CoffeeState.READY_TO_DRINK:
+			drink_coffee()  # Simple press to drink
+		CoffeeState.BREWING, CoffeeState.CONSUMED:
 			pass # Do nothing during these states
 		_:
 			pass
@@ -187,15 +130,9 @@ func coffee_finished_brewing():
 	update_visual_state()
 	print("Coffee finished brewing - ready to drink!")
 
-func finish_drinking_coffee():
+func drink_coffee():
+	"""Simple press to drink coffee - no holding required"""
 	current_state = CoffeeState.CONSUMED
-	is_drinking = false
-	is_holding_space = false
-	space_hold_time = 0.0
-	
-	# Hide progress bar
-	if game_ui:
-		game_ui.hide_progress_bar()
 	
 	play_sound("success")
 	update_coffee_visual()
@@ -215,9 +152,6 @@ func _on_player_exited(body):
 	if body.name == "Player":
 		player_nearby = false
 		update_visual_state()
-		# Reset drinking progress if player leaves
-		if is_holding_space:
-			reset_drinking()
 
 func play_sound(sound_name: String):
 	if sounds.has(sound_name):
@@ -242,15 +176,10 @@ func update_coffee_visual():
 			coffee_sprite.animation = "full"
 			coffee_light.animation = "green"
 			coffee_light.visible = true  # Show green light
-		CoffeeState.DRINKING:
-			coffee_sprite.animation = "full"
-			coffee_light.animation = "green"
-			coffee_light.visible = true  # Keep green light
 		CoffeeState.CONSUMED:
 			coffee_sprite.animation = "empty"
 			coffee_light.animation = "green"
 			coffee_light.visible = true  # Show green light during buff
-			
 			
 func update_visual_state():
 	match current_state:
@@ -265,9 +194,6 @@ func update_visual_state():
 		CoffeeState.READY_TO_DRINK:
 			speech_bubbles.visible = true
 			speech_bubbles.animation = "Exclamation"  # Exclamation when ready to drink
-		CoffeeState.DRINKING:
-			speech_bubbles.visible = true
-			speech_bubbles.animation = "Busy"  # Busy while drinking
 		CoffeeState.CONSUMED:
 			speech_bubbles.visible = false  # No speech bubble during speed buff
 			
@@ -289,9 +215,6 @@ func reset_to_idle_state():
 	
 	# Reset all variables
 	player_nearby = false
-	is_holding_space = false
-	space_hold_time = 0.0
-	is_drinking = false
 	
 	# Hide progress bar if visible
 	if game_ui and game_ui.progress_bar.visible:
@@ -299,4 +222,3 @@ func reset_to_idle_state():
 	
 	respawn_timer.start()  # Start 30-second timer to become ready again
 	print("Coffee reset to idle - will be ready again in 30 seconds...")
-	

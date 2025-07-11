@@ -1,4 +1,4 @@
-# pushpal_desk_3.gd
+# pushpal_desk1.gd
 extends Node2D
 
 @onready var interaction_area = $InteractionArea
@@ -19,15 +19,9 @@ var slow_blink_timer: Timer
 var fast_blink_timer: Timer
 var solid_red_timer: Timer
 
-# Zone task variables
-var player_in_zone = false
-var zone_timer = 0.0
-var zone_duration = 2.0  # 2 seconds to complete
-var game_ui: CanvasLayer
-var zone_indicator: ColorRect  # Visual zone indicator
-
 @onready var typing_sound = preload("res://sounds/laptop_typing2.wav")
 @onready var computerOn_sound = preload("res://sounds/computer_start.wav")
+
 
 func _ready():
 	# Setup audio
@@ -55,86 +49,30 @@ func _ready():
 	solid_red_timer.timeout.connect(start_solid_red)
 	add_child(solid_red_timer)
 	
-	# Find the GameUI node for progress bar
-	game_ui = get_tree().get_first_node_in_group("game_ui")
-	
 	# Connect signals
 	interaction_area.body_entered.connect(_on_player_entered)
 	interaction_area.body_exited.connect(_on_player_exited)
 	
-	# Setup zone visual indicator
-	setup_zone_indicator()
 	
 	# Hide speech bubble initially (use default animation which has no frames)
 	task_bubble.animation = "default"
 	task_bubble.visible = false
 
-func setup_zone_indicator():
-	# Create a visual indicator for the zone
-	zone_indicator = ColorRect.new()
-	
-	# Match the size and position of the interaction area
-	var interaction_shape = interaction_area.get_child(0).shape as RectangleShape2D
-	zone_indicator.size = interaction_shape.size
-	zone_indicator.position = interaction_area.get_child(0).position - (interaction_shape.size / 2)
-	
-	# Style the zone indicator
-	zone_indicator.color = Color(0.8, 0.8, 0.8, 0.3)  # Light grey with transparency
-	zone_indicator.visible = false
-	
-	add_child(zone_indicator)
-
-func _process(delta):
-	if has_active_task and player_in_zone:
-		zone_timer += delta
-		
-		# Update progress bar (counting UP like desk 2)
-		var progress = (zone_timer / zone_duration) * 100
-		if game_ui and game_ui.progress_bar.visible:
-			game_ui.progress_bar.value = progress
-		
-		if zone_timer >= zone_duration:
-			complete_task()
+func _input(event):
+	if event.is_action_pressed("ui_accept") and player_nearby and has_active_task:
+		complete_task()
 
 func _on_player_entered(body):
 	if body.name == "Player":
 		player_nearby = true
-		
-		if has_active_task:
-			player_in_zone = true
-			zone_timer = 0.0  # Reset timer when entering
-			
-			# Show progress bar
-			if game_ui:
-				game_ui.show_progress_bar(zone_duration, "Stay in zone...")
-			
-			print("Player entered zone - starting countdown")
-		
 		update_visual_state()
 
 func _on_player_exited(body):
 	if body.name == "Player":
 		player_nearby = false
-		player_in_zone = false
-		zone_timer = 0.0  # Reset timer when leaving
-		
-		# Hide progress bar
-		if game_ui and game_ui.progress_bar.visible:
-			game_ui.hide_progress_bar()
-		
-		print("Player left zone - resetting countdown")
 		update_visual_state()
 
 func complete_task():
-	print("Zone task completed at ", name)
-	
-	# Hide progress bar
-	if game_ui:
-		game_ui.hide_progress_bar()
-	
-	player_in_zone = false
-	zone_timer = 0.0
-	
 	computerOn()
 	typing()
 	
@@ -157,32 +95,21 @@ func set_task_active(active: bool):
 		task_start_time = Time.get_time_dict_from_system()["second"]
 		start_blinking_timers()
 		$DeskBody/ComputerSprite.animation = "on"
-		zone_indicator.visible = true
-		print(name, " now has an active zone task!")
 	else:
 		# Stop blinking when task is completed or failed
 		stop_blinking()
 		$DeskBody/ComputerSprite.animation = "off"
-		zone_indicator.visible = false
-		
-		# Clean up zone task state when task becomes inactive
-		player_in_zone = false
-		zone_timer = 0.0
-		if game_ui and game_ui.progress_bar.visible:
-			game_ui.hide_progress_bar()
-		
-		print(name, " task cleared")
 	
 	update_visual_state()
 
 func update_visual_state():
 	if has_active_task:
 		if player_nearby:
-			# For zone task, show different instruction
+			# Show press space instruction, hide task bubble
 			task_bubble.visible = true
-			task_bubble.animation = "hold"  # Use hold animation for zone task
+			task_bubble.animation = "press"
 		else:
-			# Show task exclamation
+			# Show task exclamation, hide instruction
 			task_bubble.visible = true
 			task_bubble.animation = "task"
 	else:
@@ -239,8 +166,8 @@ func reset_blinking():
 	task_start_time = 0.0
 
 func _on_blink_timer_timeout():
-	if is_blinking and has_active_task and not player_nearby:
-		# Only blink when player is not nearby (task bubble is visible)
+	if is_blinking and has_active_task:
+		# Toggle between normal and red
 		if task_bubble.modulate == Color.WHITE:
 			task_bubble.modulate = Color.RED
 		else:
