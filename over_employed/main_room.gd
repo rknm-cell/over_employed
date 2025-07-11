@@ -9,7 +9,6 @@ var max_fails = 3
 var task_counter = 1
 
 # Coffee logic
-var coffee_spawn_timer: Timer
 var coffee_buff_active = false
 var coffee_buff_time_remaining = 0.0
 var coffee_buff_duration = 30.0
@@ -100,13 +99,6 @@ func setup_timers():
 	add_child(task_spawn_timer)
 	task_spawn_timer.wait_time = 5.0
 	task_spawn_timer.timeout.connect(_on_spawn_cycle)
-	
-	# Coffee spawn timer - triggers at 60 seconds
-	coffee_spawn_timer = Timer.new()
-	add_child(coffee_spawn_timer)
-	coffee_spawn_timer.wait_time = 5.0
-	coffee_spawn_timer.one_shot = true
-	coffee_spawn_timer.timeout.connect(_on_coffee_available)
 
 func _process(delta):
 	if is_game_active:
@@ -137,15 +129,16 @@ func start_game():
 	is_game_active = true
 	fail_count = 0
 	game_time_elapsed = 0.0
-	task_counter = 1
+	task_counter = 0
 	
 	# Initial spawn: One random task
 	spawn_initial_tasks()
 	
 	# Start the 5-second cycle timer
 	task_spawn_timer.start()
-	# Start coffee timer
-	coffee_spawn_timer.start()
+	# Start coffee system
+	if coffee_location_node and coffee_location_node.has_method("start_coffee_system"):
+		coffee_location_node.start_coffee_system()
 	
 func spawn_initial_tasks():
 	# Spawn one random task at the beginning
@@ -242,7 +235,6 @@ func add_fail():
 func end_game(won: bool):
 	is_game_active = false
 	task_spawn_timer.stop()
-	coffee_spawn_timer.stop()
 	
 	# Stop all active task timers
 	for task_name in active_tasks:
@@ -286,7 +278,11 @@ func deactivate_coffee_buff():
 	
 	# Reset player speed to normal
 	if player_node:
-		player_node.speed /= 2  # Divide by 2 to get back to original speed
+		player_node.speed /= 2
+	
+	# Notify coffee that buff expired
+	if coffee_location_node and coffee_location_node.has_method("on_speed_buff_expired"):
+		coffee_location_node.on_speed_buff_expired()
 		
 # Signal handlers for menu manager
 func _on_start_game_requested():
@@ -299,12 +295,9 @@ func _on_restart_game_requested():
 func _on_resume_game_requested():
 	pass
 
-# New function to reset game state
-# In main_room.gd, update the reset_game function:
 func reset_game():
 	# Stop all timers
 	task_spawn_timer.stop()
-	coffee_spawn_timer.stop()
 	
 	# Clear active tasks
 	for task_name in active_tasks:
@@ -320,18 +313,13 @@ func reset_game():
 	if coffee_buff_active:
 		deactivate_coffee_buff()
 	
-	# Reset coffee location AND its internal system
-	if coffee_location_node:
-		if coffee_location_node.has_method("set_task_active"):
-			coffee_location_node.set_task_active(false)
-		# ADD THIS: Reset the coffee system's internal state
-		if coffee_location_node.has_method("reset_coffee_system"):
-			coffee_location_node.reset_coffee_system()
+	# Reset coffee system
+	if coffee_location_node and coffee_location_node.has_method("reset_coffee_system"):
+		coffee_location_node.reset_coffee_system()
 	
-	# ADD THIS: Reset player position to starting position
+	# Reset player position
 	if player_node:
-		# You can adjust these coordinates to wherever you want the player to start
-		player_node.position = Vector2(500, 300)  # Change these to your desired starting position
+		player_node.position = Vector2(500, 300)
 	
 	# Reset game variables
 	game_time_elapsed = 0.0
