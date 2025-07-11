@@ -1,15 +1,18 @@
+#computer.gd
 extends Node2D
 
 @onready var interaction_area = $InteractionArea
 @onready var audio_player = AudioStreamPlayer2D.new()
-@onready var speech_bubble = $ComputerBody/SpeechBubbleAnimation
+
+# Use the existing speech bubble animation system like desk 1's simple sprites
+@onready var task_bubble = $ComputerBody/SpeechBubbleAnimation
+@onready var instruction_bubble = $ComputerBody/SpeechBubbleAnimation  # Same node, different animations
 
 var player_nearby = false
 var has_active_task = false
 
 @onready var typing_sound = preload("res://sounds/laptop_typing2.wav")
 @onready var computerOn_sound = preload("res://sounds/computer_start.wav")
-
 
 func _ready():
 	# Setup audio
@@ -19,8 +22,9 @@ func _ready():
 	interaction_area.body_entered.connect(_on_player_entered)
 	interaction_area.body_exited.connect(_on_player_exited)
 	
-	# Set speech bubble to default (no animation)
-	speech_bubble.animation = "default"
+	# Hide speech bubble initially (use default animation which has no frames)
+	task_bubble.animation = "default"
+	task_bubble.visible = false
 
 func _input(event):
 	if event.is_action_pressed("ui_accept") and player_nearby and has_active_task:
@@ -30,16 +34,13 @@ func _on_player_entered(body):
 	if body.name == "Player":
 		player_nearby = true
 		update_visual_state()
-		print("Player can interact with computer")
 
 func _on_player_exited(body):
 	if body.name == "Player":
 		player_nearby = false
 		update_visual_state()
-		print("Player left computer area")
 
 func complete_task():
-	print("Completing task at ", name)
 	computerOn()
 	typing()
 	
@@ -57,21 +58,24 @@ func typing():
 func set_task_active(active: bool):
 	has_active_task = active
 	update_visual_state()
-	$ComputerBody/ComputerSprite.animation = "on"
 	
+	# Computer screen logic: on when task active, off when completed
 	if active:
-		print(name, " now has an active task!")
+		$ComputerBody/ComputerSprite.animation = "on"  # Black screen when task active
 	else:
-		print(name, " task cleared")
+		$ComputerBody/ComputerSprite.animation = "off"  # White screen when task completed
 
 func update_visual_state():
 	if has_active_task:
 		if player_nearby:
-			# Show press animation when player is nearby
-			speech_bubble.animation = "press"
+			# Show press space instruction, hide task bubble
+			task_bubble.visible = true
+			task_bubble.animation = "press"
 		else:
-			# Show task animation when task is active but player not nearby
-			speech_bubble.animation = "task"
+			# Show task exclamation, hide instruction
+			task_bubble.visible = true
+			task_bubble.animation = "task"
 	else:
-		# No active task - show default (no animation)
-		speech_bubble.animation = "default"
+		# No active task - hide speech bubble completely
+		task_bubble.visible = false
+		task_bubble.animation = "default"
