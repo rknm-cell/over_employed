@@ -10,7 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://c24xgn307tbxm" path="res://art/run_cycle/painted/run_cycle_back_01.png" id="7_pbfsw"]
 [ext_resource type="Texture2D" uid="uid://3rerj78k7rj4" path="res://art/run_cycle/painted/run_cycle_back_02.png" id="8_5tmop"]
 [ext_resource type="Script" uid="uid://ntdodq1uclvr" path="res://interaction_detector.gd" id="8_dw050"]
-[ext_resource type="Texture2D" uid="uid://kkehcmlqeypb" path="res://art/run_cycle/typing_torso_02.png" id="8_q13i1"]
+[ext_resource type="Texture2D" uid="uid://p1a0f6trn0wl" path="res://art/run_cycle/typing_torso_03.png" id="8_op7ga"]
 [ext_resource type="Texture2D" uid="uid://jsx47un0agcx" path="res://art/run_cycle/painted/run_cycle_back_03.png" id="9_7ahtn"]
 [ext_resource type="Texture2D" uid="uid://7tl1ttluhy1c" path="res://art/run_cycle/painted/run_cycle_back_04.png" id="10_7lmhl"]
 [ext_resource type="Texture2D" uid="uid://lqiu4smj2kmx" path="res://art/run_cycle/painted/run_side_01.png" id="12_u1c27"]
@@ -50,7 +50,7 @@ animations = [{
 "texture": ExtResource("7_op7ga")
 }, {
 "duration": 1.0,
-"texture": ExtResource("8_q13i1")
+"texture": ExtResource("8_op7ga")
 }],
 "loop": true,
 "name": &"typing",
@@ -101,8 +101,7 @@ script = ExtResource("1_sweqy")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(1, 0)
 sprite_frames = SubResource("SpriteFrames_dw050")
-animation = &"down"
-frame_progress = 0.265417
+animation = &"typing"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 77)
