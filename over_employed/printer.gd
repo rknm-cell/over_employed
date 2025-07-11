@@ -22,7 +22,6 @@ enum PrinterState {
 var current_state = PrinterState.IDLE
 var player_nearby = false
 
-<<<<<<< Updated upstream
 # Paper jam fixing variables
 var is_holding_space = false
 var space_hold_time = 0.0
@@ -36,9 +35,6 @@ var task_start_time = 0.0
 var slow_blink_timer: Timer
 var fast_blink_timer: Timer
 var solid_red_timer: Timer
-
-=======
->>>>>>> Stashed changes
 # Sounds
 @onready var sounds = {
 	"success": preload("res://sounds/success.wav"),
