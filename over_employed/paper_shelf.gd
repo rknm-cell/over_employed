@@ -1,4 +1,4 @@
-# paper_shelf.gd - Updated with space key pickup
+# paper_shelf.gd - Updated with space key pickup and proper visibility control
 extends Node2D
 # Create a smaller white rectangle for paper
 @onready var interaction_area = $InteractionArea
@@ -34,12 +34,12 @@ func _ready():
 	# Setup paper visual
 
 	
-	# Set speech bubble to default (no animation)
+	# Hide speech bubble initially (like computer.gd)
+	speech_bubble.visible = false
 	speech_bubble.animation = "default"
 	
 	# Ensure shelf starts with no active task
 	has_active_task = false
-	update_visual_state()
 
 
 
@@ -71,13 +71,13 @@ func take_paper():
 	has_paper = false
 	game_ui.add_to_inventory("paper")
 	play_sound("paper_pickup")
-	print("Picked up paper!")
+	print("Paper taken")  # Simple console message
 	
-	# Deactivate shelf task and reactivate printer
+	# Deactivate shelf task
 	set_task_active(false)
 	
 	# Tell printer to show "return to printer" state
-	var printer = get_tree().get_first_node_in_group("printer")  # You might need to add printer to a group
+	var printer = get_tree().get_first_node_in_group("printer")
 	if printer:
 		printer.current_state = printer.PrinterState.WAITING_FOR_PAPER_RETURN
 		printer.update_visual_state()
@@ -93,13 +93,6 @@ func _on_player_entered(body):
 	if body.is_in_group("player"):
 		player_nearby = true
 		update_visual_state()
-		if has_active_task:
-			if has_paper:
-				print("Press P to pick up paper")
-			else:
-				print("Shelf is empty")
-		else:
-			print("No active task - paper not available")
 
 func _on_player_exited(body):
 	if body.is_in_group("player"):
@@ -125,10 +118,13 @@ func update_visual_state():
 	if has_active_task:
 		if player_nearby:
 			# Show instruction animation when player is nearby
+			speech_bubble.visible = true
 			speech_bubble.animation = "instruction"
 		else:
 			# Show task animation when task is active but player not nearby
+			speech_bubble.visible = true
 			speech_bubble.animation = "task"
 	else:
-		# No active task - show default (no animation)
+		# No active task - hide speech bubble completely (like computer.gd)
+		speech_bubble.visible = false
 		speech_bubble.animation = "default"
