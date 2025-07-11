@@ -28,6 +28,14 @@ var space_hold_time = 0.0
 var space_hold_duration = 2.0  # Changed from 5 to 2 seconds
 var fixing_paper_jam = false
 
+# Blinking variables (from computer.gd)
+var is_blinking = false
+var blink_timer: Timer
+var task_start_time = 0.0
+var slow_blink_timer: Timer
+var fast_blink_timer: Timer
+var solid_red_timer: Timer
+
 # Sounds
 @onready var sounds = {
 	"success": preload("res://sounds/success.wav"),
@@ -43,6 +51,28 @@ func _ready():
 	
 	# Find the GameUI node
 	game_ui = get_tree().get_first_node_in_group("game_ui")
+	
+	# Setup blinking timers (from computer.gd)
+	blink_timer = Timer.new()
+	blink_timer.one_shot = false
+	blink_timer.timeout.connect(_on_blink_timer_timeout)
+	add_child(blink_timer)
+	
+	# Setup phase timers
+	slow_blink_timer = Timer.new()
+	slow_blink_timer.one_shot = true
+	slow_blink_timer.timeout.connect(start_slow_blinking)
+	add_child(slow_blink_timer)
+	
+	fast_blink_timer = Timer.new()
+	fast_blink_timer.one_shot = true
+	fast_blink_timer.timeout.connect(start_fast_blinking)
+	add_child(fast_blink_timer)
+	
+	solid_red_timer = Timer.new()
+	solid_red_timer.one_shot = true
+	solid_red_timer.timeout.connect(start_solid_red)
+	add_child(solid_red_timer)
 	
 	interaction_area.body_entered.connect(_on_player_entered)
 	interaction_area.body_exited.connect(_on_player_exited)
@@ -65,6 +95,8 @@ func set_task_active(active: bool):
 		current_state = PrinterState.IDLE
 		update_printer_visual()
 		update_visual_state()
+		# Stop blinking when task is completed or failed
+		stop_blinking()
 
 func start_random_printer_task():
 	# Randomly choose between out of paper (blue) or paper jam (red)
@@ -80,6 +112,10 @@ func start_random_printer_task():
 	
 	update_printer_visual()
 	update_visual_state()
+	
+	# Start blinking timers when task is assigned
+	task_start_time = Time.get_time_dict_from_system()["second"]
+	start_blinking_timers()
 	
 	# Flash the light briefly to indicate task start
 	flash_task_start()
@@ -262,6 +298,63 @@ func update_visual_state():
 		else:
 			# Show task animation when player is away
 			printer_bubble_animation.animation = "task"
+
+# Blinking functions (from computer.gd)
+func start_blinking_timers():
+	# Start 5-second timer for initial blinking
+	slow_blink_timer.wait_time = 5.0
+	slow_blink_timer.start()
+	
+	# Start 10-second timer for fast blinking (5 seconds after slow blinking starts)
+	fast_blink_timer.wait_time = 10.0
+	fast_blink_timer.start()
+	
+	# Start 14-second timer for solid red (4 seconds after fast blinking starts)
+	solid_red_timer.wait_time = 14.0
+	solid_red_timer.start()
+
+func start_slow_blinking():
+	if current_state != PrinterState.IDLE and current_state != PrinterState.WAITING_FOR_PAPER_PICKUP:
+		is_blinking = true
+		blink_timer.wait_time = 0.5
+		blink_timer.start()
+		printer_bubble_animation.modulate = Color.WHITE  # Reset to white when starting
+
+func start_fast_blinking():
+	if current_state != PrinterState.IDLE and current_state != PrinterState.WAITING_FOR_PAPER_PICKUP:
+		is_blinking = true
+		blink_timer.wait_time = 0.25
+		blink_timer.start()
+		printer_bubble_animation.modulate = Color.WHITE  # Reset to white when starting
+
+func start_solid_red():
+	if current_state != PrinterState.IDLE and current_state != PrinterState.WAITING_FOR_PAPER_PICKUP:
+		is_blinking = false
+		blink_timer.stop()
+		printer_bubble_animation.modulate = Color.RED
+
+func stop_blinking():
+	is_blinking = false
+	blink_timer.stop()
+	printer_bubble_animation.modulate = Color.WHITE
+
+func reset_blinking():
+	"""Reset blinking system completely - called when game resets"""
+	is_blinking = false
+	blink_timer.stop()
+	slow_blink_timer.stop()
+	fast_blink_timer.stop()
+	solid_red_timer.stop()
+	printer_bubble_animation.modulate = Color.WHITE
+	task_start_time = 0.0
+
+func _on_blink_timer_timeout():
+	if is_blinking and current_state != PrinterState.IDLE and current_state != PrinterState.WAITING_FOR_PAPER_PICKUP:
+		# Toggle between normal and red
+		if printer_bubble_animation.modulate == Color.WHITE:
+			printer_bubble_animation.modulate = Color.RED
+		else:
+			printer_bubble_animation.modulate = Color.WHITE
 
 func _on_player_entered(body):
 	if body.is_in_group("player"):
