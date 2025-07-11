@@ -1,4 +1,4 @@
-# pushpal_desk_2.gd
+# pushpal_desk1.gd
 extends Node2D
 
 @onready var interaction_area = $InteractionArea
@@ -19,14 +19,9 @@ var slow_blink_timer: Timer
 var fast_blink_timer: Timer
 var solid_red_timer: Timer
 
-# Hold space variables
-var is_holding_space = false
-var space_hold_time = 0.0
-var space_hold_duration = 2.0  # 2 seconds
-var game_ui: CanvasLayer
-
 @onready var typing_sound = preload("res://sounds/laptop_typing2.wav")
 @onready var computerOn_sound = preload("res://sounds/computer_start.wav")
+
 
 func _ready():
 	# Setup audio
@@ -54,49 +49,18 @@ func _ready():
 	solid_red_timer.timeout.connect(start_solid_red)
 	add_child(solid_red_timer)
 	
-	# Find the GameUI node for progress bar
-	game_ui = get_tree().get_first_node_in_group("game_ui")
-	
 	# Connect signals
 	interaction_area.body_entered.connect(_on_player_entered)
 	interaction_area.body_exited.connect(_on_player_exited)
+	
 	
 	# Hide speech bubble initially (use default animation which has no frames)
 	task_bubble.animation = "default"
 	task_bubble.visible = false
 
-func _process(delta):
-	# Handle holding Space key
-	if has_active_task and player_nearby:
-		if Input.is_action_pressed("ui_accept"):  # Space key
-			if not is_holding_space:
-				# Start holding Space
-				is_holding_space = true
-				space_hold_time = 0.0
-				if game_ui:
-					game_ui.show_progress_bar(space_hold_duration, "Working on task (hold Space)...")
-			
-			# Update hold time
-			space_hold_time += delta
-			
-			# Update progress bar value
-			var progress = (space_hold_time / space_hold_duration) * 100
-			if game_ui and game_ui.progress_bar.visible:
-				game_ui.progress_bar.value = progress
-			
-			# Check if hold duration is complete
-			if space_hold_time >= space_hold_duration:
-				complete_task()
-		else:
-			# Player let go of Space key - reset progress
-			if is_holding_space:
-				reset_space_hold()
-
-func reset_space_hold():
-	is_holding_space = false
-	space_hold_time = 0.0
-	if game_ui and game_ui.progress_bar.visible:
-		game_ui.hide_progress_bar()
+func _input(event):
+	if event.is_action_pressed("ui_accept") and player_nearby and has_active_task:
+		complete_task()
 
 func _on_player_entered(body):
 	if body.name == "Player":
@@ -107,18 +71,8 @@ func _on_player_exited(body):
 	if body.name == "Player":
 		player_nearby = false
 		update_visual_state()
-		# Reset progress if player leaves
-		if is_holding_space:
-			reset_space_hold()
 
 func complete_task():
-	is_holding_space = false
-	space_hold_time = 0.0
-	
-	# Hide progress bar
-	if game_ui:
-		game_ui.hide_progress_bar()
-	
 	computerOn()
 	typing()
 	
@@ -151,11 +105,11 @@ func set_task_active(active: bool):
 func update_visual_state():
 	if has_active_task:
 		if player_nearby:
-			# Show hold space instruction
+			# Show press space instruction, hide task bubble
 			task_bubble.visible = true
-			task_bubble.animation = "hold"
+			task_bubble.animation = "press"
 		else:
-			# Show task exclamation
+			# Show task exclamation, hide instruction
 			task_bubble.visible = true
 			task_bubble.animation = "task"
 	else:
@@ -212,8 +166,8 @@ func reset_blinking():
 	task_start_time = 0.0
 
 func _on_blink_timer_timeout():
-	if is_blinking and has_active_task and not player_nearby:
-		# Only blink when player is not nearby (task bubble is visible)
+	if is_blinking and has_active_task:
+		# Toggle between normal and red
 		if task_bubble.modulate == Color.WHITE:
 			task_bubble.modulate = Color.RED
 		else:

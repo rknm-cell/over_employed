@@ -1,4 +1,4 @@
-# printer.gd - Updated with auto-start and Space key mechanics
+# printer.gd - Updated with auto-start and Space key mechanics (ALL PRESS SPACE)
 extends Node2D
 
 @onready var printer_visual = $PrinterBody/PrinterVisual  # Your printer rectangle
@@ -22,6 +22,7 @@ enum PrinterState {
 var current_state = PrinterState.IDLE
 var player_nearby = false
 
+<<<<<<< Updated upstream
 # Paper jam fixing variables
 var is_holding_space = false
 var space_hold_time = 0.0
@@ -36,6 +37,8 @@ var slow_blink_timer: Timer
 var fast_blink_timer: Timer
 var solid_red_timer: Timer
 
+=======
+>>>>>>> Stashed changes
 # Sounds
 @onready var sounds = {
 	"success": preload("res://sounds/success.wav"),
@@ -99,7 +102,7 @@ func set_task_active(active: bool):
 		stop_blinking()
 
 func start_random_printer_task():
-	# Randomly choose between out of paper (blue) or paper jam (red)
+	# Randomly choose between out of paper or paper jam
 	var random_outcome = randi() % 2  # 0 or 1
 	
 	match random_outcome:
@@ -121,35 +124,13 @@ func start_random_printer_task():
 	flash_task_start()
 
 func _input(event):
-	# Handle Space key press for paper refill (when player has paper)
+	# Handle Space key press for ALL printer tasks
 	if event.is_action_pressed("ui_accept") and player_nearby:  # Space key
 		handle_space_key_press()
 
 func _process(delta):
-	# Handle holding Space key for paper jam
-	if current_state == PrinterState.PAPER_JAM and player_nearby and not fixing_paper_jam:
-		if Input.is_action_pressed("ui_accept"):  # Space key
-			if not is_holding_space:
-				# Start holding Space
-				is_holding_space = true
-				space_hold_time = 0.0
-				game_ui.show_progress_bar(space_hold_duration, "Fixing paper jam (hold Space)...")
-			
-			# Update hold time
-			space_hold_time += delta
-			
-			# Update progress bar value
-			var progress = (space_hold_time / space_hold_duration) * 100
-			if game_ui and game_ui.progress_bar.visible:
-				game_ui.progress_bar.value = progress
-			
-			# Check if hold duration is complete
-			if space_hold_time >= space_hold_duration:
-				fix_paper_jam()
-		else:
-			# Player let go of Space key - reset progress
-			if is_holding_space:
-				reset_space_hold()
+	# Handle coffee buff countdown (if any other systems need it)
+	pass
 
 func handle_space_key_press():
 	match current_state:
@@ -158,7 +139,7 @@ func handle_space_key_press():
 		PrinterState.WAITING_FOR_PAPER_RETURN:
 			attempt_refill_paper()
 		PrinterState.PAPER_JAM:
-			pass  # Paper jam uses hold, not press
+			fix_paper_jam()  # Now just a simple press to fix
 		PrinterState.IDLE:
 			pass
 		_:
@@ -169,13 +150,17 @@ func attempt_refill_paper():
 		# Player doesn't have paper - need to go get it from shelf
 		current_state = PrinterState.WAITING_FOR_PAPER_PICKUP
 		
+		# FIX: Complete the main room task since we're handling it internally
+		var main_room = get_parent()
+		main_room.complete_task(name)
+		
 		# Activate the paper shelf
 		var shelf = get_tree().get_first_node_in_group("paper_shelf")
 		if shelf:
 			shelf.set_task_active(true)
 		
-		update_visual_state()  # Hide printer bubbles
-		return
+		update_visual_state()
+		return 
 	
 	# Player has paper, start refilling
 	refill_paper()
@@ -200,24 +185,14 @@ func refill_paper():
 	complete_task()
 
 func fix_paper_jam():
-	fixing_paper_jam = true
+	# Simple press to fix paper jam (no more holding)
 	current_state = PrinterState.FIXING
-	
-	# Reset Space key variables
-	is_holding_space = false
-	space_hold_time = 0.0
-	
-	# Hide progress bar
-	if game_ui:
-		game_ui.hide_progress_bar()
-	
 	update_printer_visual()
 	
 	# Brief fixing delay
 	await get_tree().create_timer(1.0).timeout
 	
 	# Task completed
-	fixing_paper_jam = false
 	complete_task()
 
 func complete_task():
@@ -237,12 +212,6 @@ func complete_task():
 	current_state = PrinterState.IDLE
 	update_printer_visual()
 	update_visual_state()
-
-func reset_space_hold():
-	is_holding_space = false
-	space_hold_time = 0.0
-	if game_ui and game_ui.progress_bar.visible:
-		game_ui.hide_progress_bar()
 
 func flash_printer_color():
 	var original_animation = printer_light.animation
@@ -287,14 +256,8 @@ func update_visual_state():
 		printer_bubble_animation.visible = true
 		
 		if player_nearby:
-			# Show instruction animation based on state
-			match current_state:
-				PrinterState.PAPER_JAM:
-					printer_bubble_animation.animation = "hold"
-				PrinterState.OUT_OF_PAPER, PrinterState.WAITING_FOR_PAPER_RETURN:
-					printer_bubble_animation.animation = "press"
-				_:
-					printer_bubble_animation.animation = "press"
+			# Show press space instruction for ALL states (no more hold)
+			printer_bubble_animation.animation = "press"
 		else:
 			# Show task animation when player is away
 			printer_bubble_animation.animation = "task"
@@ -365,9 +328,6 @@ func _on_player_exited(body):
 	if body.is_in_group("player"):
 		player_nearby = false
 		update_visual_state()
-		# Reset Space key progress if player leaves
-		if is_holding_space:
-			reset_space_hold()
 
 func play_sound(sound_name: String):
 	if sounds.has(sound_name):
