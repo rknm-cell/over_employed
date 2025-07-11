@@ -15,6 +15,13 @@ var coffee_buff_duration = 30.0
 var player_node: CharacterBody2D
 var coffee_location_node: Node2D
 
+# Add these new variables after your existing game state variables
+var base_spawn_time = 5.0
+var min_spawn_time = 2.0
+var current_spawn_time = 5.0
+var speed_increase_interval = 30.0  # Every 30 seconds
+var last_speed_increase_time = 0.0
+
 # Timers
 @onready var task_spawn_timer = Timer.new()
 
@@ -105,6 +112,9 @@ func _process(delta):
 	if is_game_active:
 		game_time_elapsed += delta
 		
+		# Check if we should increase difficulty
+		check_difficulty_increase()
+		
 		# Handle coffee buff countdown
 		if coffee_buff_active:
 			coffee_buff_time_remaining -= delta
@@ -132,15 +142,21 @@ func start_game():
 	game_time_elapsed = 0.0
 	task_counter = 0
 	
+	# Reset difficulty system
+	current_spawn_time = base_spawn_time
+	last_speed_increase_time = 0.0
+	task_spawn_timer.wait_time = current_spawn_time
+	
 	# Initial spawn: One random task
 	spawn_initial_tasks()
 	
-	# Start the 5-second cycle timer
+	# Start the timer with initial spawn time
 	task_spawn_timer.start()
+	
 	# Start coffee system
 	if coffee_location_node and coffee_location_node.has_method("start_coffee_system"):
 		coffee_location_node.start_coffee_system()
-	
+		
 func spawn_initial_tasks():
 	# Spawn one random task at the beginning
 	var random_location = current_task_locations[randi() % current_task_locations.size()]
@@ -300,6 +316,45 @@ func _on_restart_game_requested():
 func _on_resume_game_requested():
 	pass
 
+# Add this new function:
+func check_difficulty_increase():
+	# Check if we've passed a 30-second interval
+	var current_interval = int(game_time_elapsed / speed_increase_interval)
+	var last_interval = int(last_speed_increase_time / speed_increase_interval)
+	
+	if current_interval > last_interval and current_spawn_time > min_spawn_time:
+		# Time to increase difficulty!
+		increase_difficulty()
+		last_speed_increase_time = game_time_elapsed
+
+# Add this new function:
+func increase_difficulty():
+	var old_spawn_time = current_spawn_time
+	current_spawn_time = max(current_spawn_time - 1.0, min_spawn_time)
+	
+	# Update the timer for future spawns
+	task_spawn_timer.wait_time = current_spawn_time
+	
+	# Placeholder for visual/audio feedback
+	show_speed_increase_feedback(old_spawn_time, current_spawn_time)
+	
+	print("DIFFICULTY INCREASED! Spawn time: %.1fs -> %.1fs" % [old_spawn_time, current_spawn_time])
+
+# Add this placeholder function for feedback:
+func show_speed_increase_feedback(old_time: float, new_time: float):
+	# TODO: Add visual/audio feedback here
+	# Ideas: Screen flash, sound effect, UI message
+	
+	# Placeholder - you can add visual effects later
+	if ui_label:
+		# Flash the UI briefly to show speed increase
+		var original_color = ui_label.modulate
+		ui_label.modulate = Color.RED
+		
+		# Reset color after brief flash
+		await get_tree().create_timer(0.2).timeout
+		ui_label.modulate = original_color
+		
 func reset_game():
 	# Stop all timers
 	task_spawn_timer.stop()
@@ -314,7 +369,7 @@ func reset_game():
 			location_node.set_task_active(false)
 	active_tasks.clear()
 	
-	# Reset ALL task locations to ensure no lingering tasks
+	# Reset ALL task locations to ensure no lingering tasks (THIS WAS MISSING!)
 	for location in all_task_locations:
 		if location.has_method("set_task_active"):
 			location.set_task_active(false)
@@ -322,7 +377,7 @@ func reset_game():
 		if location.has_method("reset_blinking"):
 			location.reset_blinking()
 	
-	# Reset HUD lives
+	# Reset HUD lives (THIS WAS MISSING!)
 	if hud_lives:
 		for i in range(1, 4):
 			var life_node = hud_lives.get_node("Life_0%d/Fired" % i)
@@ -348,5 +403,10 @@ func reset_game():
 	score = 0
 	is_game_active = false
 	
-	# Update UI to reflect reset state
+	# Reset difficulty system
+	current_spawn_time = base_spawn_time
+	last_speed_increase_time = 0.0
+	task_spawn_timer.wait_time = current_spawn_time
+	
+	# Update UI to reflect reset state (THIS WAS MISSING!)
 	update_ui()
