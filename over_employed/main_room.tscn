@@ -133,7 +133,42 @@ shape = SubResource("RectangleShape2D_eifuj")
 z_index = 11
 position = Vector2(698.718, 296.154)
 
+[node name="Node2D" type="Node2D" parent="."]
+z_index = 22
+
+[node name="ColorRect" type="ColorRect" parent="Node2D"]
+offset_left = -864.0
+offset_top = -194.0
+offset_right = -773.0
+offset_bottom = 77.0
+scale = Vector2(9.24, 9.24)
+color = Color(0, 0, 0, 1)
+
+[node name="ColorRect4" type="ColorRect" parent="Node2D"]
+offset_left = 3442.0
+offset_top = -868.0
+offset_right = 3542.0
+offset_bottom = -520.0
+scale = Vector2(9.24, 9.24)
+color = Color(0, 0, 0, 1)
+
+[node name="ColorRect3" type="ColorRect" parent="Node2D"]
+offset_left = -864.0
+offset_top = -872.0
+offset_right = -319.0
+offset_bottom = -779.0
+scale = Vector2(9.24, 9.24)
+color = Color(0, 0, 0, 1)
+
+[node name="ColorRect2" type="ColorRect" parent="Node2D"]
+offset_left = -869.0
+offset_top = 1949.0
+offset_right = -302.0
+offset_bottom = 2048.0
+scale = Vector2(9.24, 9.24)
+color = Color(0, 0, 0, 1)
+
 [node name="Floor" type="Sprite2D" parent="."]
 z_index = -1
-position = Vector2(1726.92, 974.359)
+position = Vector2(1734.62, 971.795)
 texture = ExtResource("16_1xp4t")
