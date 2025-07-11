@@ -78,7 +78,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bg6te"]
-size = Vector2(502.5, 308)
+size = Vector2(334, 318)
 
 [node name="Coffee" type="Node2D"]
 
@@ -113,7 +113,7 @@ animation = &"Exclamation"
 disable_mode = 1
 
 [node name="CoffeeInteractionCollision" type="CollisionShape2D" parent="CoffeeArea"]
-position = Vector2(177, 137)
+position = Vector2(-54, -32)
 shape = SubResource("RectangleShape2D_bg6te")
 
 [node name="TaskBubble" type="Sprite2D" parent="."]

@@ -17,8 +17,8 @@ func _ready():
 
 func setup_ui():
 	# Text input container (hidden by default)
-	text_input_container.position = Vector2(50, 50)
-	text_input_container.size = Vector2(300, 100)
+	text_input_container.position = Vector2(1500, 1200)
+	text_input_container.size = Vector2(200, 200)
 	text_input_container.visible = false
 	
 	# Text input label
