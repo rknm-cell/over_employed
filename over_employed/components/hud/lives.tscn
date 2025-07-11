@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3 uid="uid://bus1hg7q7iol3"]
+
+[ext_resource type="Texture2D" uid="uid://cwbrliskxaq11" path="res://art/static_assets/hud/job.png" id="1_dbslv"]
+[ext_resource type="Texture2D" uid="uid://bvalcpdclb0ox" path="res://art/static_assets/hud/fired.png" id="2_6a3oj"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Life_01" type="Sprite2D" parent="."]
+texture = ExtResource("1_dbslv")
+
+[node name="Fired" type="Sprite2D" parent="Life_01"]
+visible = false
+position = Vector2(-12, -2)
+texture = ExtResource("2_6a3oj")
+
+[node name="Life_02" type="Sprite2D" parent="."]
+position = Vector2(-200, 0)
+texture = ExtResource("1_dbslv")
+
+[node name="Fired" type="Sprite2D" parent="Life_02"]
+visible = false
+position = Vector2(-12, -2)
+texture = ExtResource("2_6a3oj")
+
+[node name="Life_03" type="Sprite2D" parent="."]
+position = Vector2(-400, 0)
+texture = ExtResource("1_dbslv")
+
+[node name="Fired" type="Sprite2D" parent="Life_03"]
+visible = false
+position = Vector2(-12, -2)
+texture = ExtResource("2_6a3oj")
