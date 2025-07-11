@@ -15,6 +15,9 @@ var has_active_task = false
 var is_blinking = false
 var blink_timer: Timer
 var task_start_time = 0.0
+var slow_blink_timer: Timer
+var fast_blink_timer: Timer
+var solid_red_timer: Timer
 
 # Hold space variables
 var is_holding_space = false
@@ -29,11 +32,27 @@ func _ready():
 	# Setup audio
 	add_child(audio_player)
 	
-	# Setup blinking timer
+	# Setup blinking timers
 	blink_timer = Timer.new()
 	blink_timer.one_shot = false
 	blink_timer.timeout.connect(_on_blink_timer_timeout)
 	add_child(blink_timer)
+	
+	# Setup phase timers
+	slow_blink_timer = Timer.new()
+	slow_blink_timer.one_shot = true
+	slow_blink_timer.timeout.connect(start_slow_blinking)
+	add_child(slow_blink_timer)
+	
+	fast_blink_timer = Timer.new()
+	fast_blink_timer.one_shot = true
+	fast_blink_timer.timeout.connect(start_fast_blinking)
+	add_child(fast_blink_timer)
+	
+	solid_red_timer = Timer.new()
+	solid_red_timer.one_shot = true
+	solid_red_timer.timeout.connect(start_solid_red)
+	add_child(solid_red_timer)
 	
 	# Find the GameUI node for progress bar
 	game_ui = get_tree().get_first_node_in_group("game_ui")
@@ -146,16 +165,16 @@ func update_visual_state():
 
 func start_blinking_timers():
 	# Start 5-second timer for initial blinking
-	var timer_5s = get_tree().create_timer(5.0)
-	timer_5s.timeout.connect(start_slow_blinking)
+	slow_blink_timer.wait_time = 5.0
+	slow_blink_timer.start()
 	
 	# Start 10-second timer for fast blinking (5 seconds after slow blinking starts)
-	var timer_10s = get_tree().create_timer(10.0)
-	timer_10s.timeout.connect(start_fast_blinking)
+	fast_blink_timer.wait_time = 10.0
+	fast_blink_timer.start()
 	
 	# Start 14-second timer for solid red (4 seconds after fast blinking starts)
-	var timer_14s = get_tree().create_timer(14.0)
-	timer_14s.timeout.connect(start_solid_red)
+	solid_red_timer.wait_time = 14.0
+	solid_red_timer.start()
 
 func start_slow_blinking():
 	if has_active_task:
@@ -181,6 +200,16 @@ func stop_blinking():
 	is_blinking = false
 	blink_timer.stop()
 	task_bubble.modulate = Color.WHITE
+
+func reset_blinking():
+	"""Reset blinking system completely - called when game resets"""
+	is_blinking = false
+	blink_timer.stop()
+	slow_blink_timer.stop()
+	fast_blink_timer.stop()
+	solid_red_timer.stop()
+	task_bubble.modulate = Color.WHITE
+	task_start_time = 0.0
 
 func _on_blink_timer_timeout():
 	if is_blinking and has_active_task and not player_nearby:

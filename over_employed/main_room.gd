@@ -314,6 +314,21 @@ func reset_game():
 			location_node.set_task_active(false)
 	active_tasks.clear()
 	
+	# Reset ALL task locations to ensure no lingering tasks
+	for location in all_task_locations:
+		if location.has_method("set_task_active"):
+			location.set_task_active(false)
+		# Also reset blinking systems if they exist
+		if location.has_method("reset_blinking"):
+			location.reset_blinking()
+	
+	# Reset HUD lives
+	if hud_lives:
+		for i in range(1, 4):
+			var life_node = hud_lives.get_node("Life_0%d/Fired" % i)
+			if life_node:
+				life_node.visible = false
+	
 	# Reset coffee buff
 	if coffee_buff_active:
 		deactivate_coffee_buff()
@@ -332,3 +347,6 @@ func reset_game():
 	task_counter = 1
 	score = 0
 	is_game_active = false
+	
+	# Update UI to reflect reset state
+	update_ui()

@@ -65,7 +65,7 @@ scale = Vector2(1.2, 1.2)
 
 [node name="Fern" parent="." instance=ExtResource("4_c6jxq")]
 z_index = 1
-position = Vector2(330.769, 987.18)
+position = Vector2(584.615, 638.462)
 
 [node name="Fern2" parent="." instance=ExtResource("4_c6jxq")]
 z_index = 1
@@ -105,6 +105,8 @@ scale = Vector2(4, 4)
 script = ExtResource("6_8007g")
 
 [node name="GameUI" parent="." instance=ExtResource("8_bdfba")]
+offset = Vector2(1500, 1200)
+transform = Transform2D(1, 0, 0, 1, 1500, 1200)
 
 [node name="Shelf" parent="." instance=ExtResource("9_pj3qg")]
 position = Vector2(-148.718, 1682.05)
@@ -133,5 +135,5 @@ position = Vector2(698.718, 296.154)
 
 [node name="Floor" type="Sprite2D" parent="."]
 z_index = -1
-position = Vector2(1733.33, 996.154)
+position = Vector2(1726.92, 974.359)
 texture = ExtResource("16_1xp4t")
