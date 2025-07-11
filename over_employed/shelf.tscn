@@ -1,36 +1,68 @@
-[gd_scene load_steps=3 format=3 uid="uid://wrftvqp476ci"]
+[gd_scene load_steps=8 format=3 uid="uid://wrftvqp476ci"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_jgb4e"]
-size = Vector2(622, 225)
+[ext_resource type="Texture2D" uid="uid://dd34qmm3xt07c" path="res://art/static_assets/paper_lineart.png" id="1_7o7sa"]
+[ext_resource type="Texture2D" uid="uid://dryjbtnssjp8v" path="res://art/static_assets/table_brown.png" id="2_xng2s"]
+[ext_resource type="Texture2D" uid="uid://jyja0pk8m05c" path="res://art/speech_bubbles/bubble_press_space.png" id="3_878aq"]
+[ext_resource type="Texture2D" uid="uid://36tlg5pvmlnt" path="res://art/speech_bubbles/bubble_exclamation.png" id="4_v6ndi"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_oen06"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_878aq")
+}],
+"loop": true,
+"name": &"instruction",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_v6ndi")
+}],
+"loop": true,
+"name": &"task",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7o7sa"]
+size = Vector2(599, 286)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0edba"]
-size = Vector2(646, 246)
+size = Vector2(332.25, 236.5)
 
 [node name="Shelf" type="Node2D"]
 
 [node name="ShelfBody" type="StaticBody2D" parent="."]
 
-[node name="ShelfVisual" type="ColorRect" parent="ShelfBody"]
-offset_right = 622.0
-offset_bottom = 223.0
-color = Color(0.292044, 0.0577099, 4.68072e-06, 1)
+[node name="Paper" type="Sprite2D" parent="ShelfBody"]
+z_index = 2
+position = Vector2(518, 65)
+texture = ExtResource("1_7o7sa")
 
-[node name="ShelfVisualCollision" type="CollisionShape2D" parent="ShelfBody"]
-position = Vector2(311, 111.5)
-shape = SubResource("RectangleShape2D_jgb4e")
+[node name="Table" type="Sprite2D" parent="ShelfBody"]
+position = Vector2(350.875, 155.875)
+scale = Vector2(0.813588, 0.802632)
+texture = ExtResource("2_xng2s")
 
-[node name="PaperVisual" type="ColorRect" parent="ShelfBody"]
-offset_left = 246.0
-offset_top = 17.0
-offset_right = 286.0
-offset_bottom = 57.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
+[node name="SpeechBubbleAnimation" type="AnimatedSprite2D" parent="ShelfBody"]
+z_index = 2
+position = Vector2(502, -133)
+sprite_frames = SubResource("SpriteFrames_oen06")
+animation = &"task"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ShelfBody"]
+position = Vector2(343.5, 147)
+shape = SubResource("RectangleShape2D_7o7sa")
 
 [node name="InteractionArea" type="Area2D" parent="."]
 
 [node name="ShelfInteractionCollision" type="CollisionShape2D" parent="InteractionArea"]
-position = Vector2(310, 112)
+position = Vector2(553.875, 17.25)
 shape = SubResource("RectangleShape2D_0edba")
 
 [node name="TaskBubble" type="Sprite2D" parent="."]

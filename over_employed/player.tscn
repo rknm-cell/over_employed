@@ -12,10 +12,10 @@
 [ext_resource type="Texture2D" uid="uid://c6vba5dgceap7" path="res://art/run_cycle/run_cycle_back_02.png" id="9_op7ga"]
 [ext_resource type="Texture2D" uid="uid://cd377etmuw8ws" path="res://art/run_cycle/run_cycle_back_03.png" id="10_q13i1"]
 [ext_resource type="Texture2D" uid="uid://cmecw22ycowrc" path="res://art/run_cycle/run_cycle_back_04.png" id="11_pylmc"]
-[ext_resource type="Texture2D" uid="uid://b0huc215825jj" path="res://art/run_cycle/run_side_01.png" id="12_u1c27"]
-[ext_resource type="Texture2D" uid="uid://cmq7ndw20q284" path="res://art/run_cycle/run_side_02.png" id="13_op7ga"]
-[ext_resource type="Texture2D" uid="uid://btt2ehm7ywmmm" path="res://art/run_cycle/run_side_03.png" id="14_q13i1"]
-[ext_resource type="Texture2D" uid="uid://cj3d3ykqipbw6" path="res://art/run_cycle/run_side_04.png" id="15_pylmc"]
+[ext_resource type="Texture2D" uid="uid://lqiu4smj2kmx" path="res://art/run_cycle/painted/run_side_01.png" id="12_u1c27"]
+[ext_resource type="Texture2D" uid="uid://facq3igpfa17" path="res://art/run_cycle/painted/run_side_02.png" id="13_op7ga"]
+[ext_resource type="Texture2D" uid="uid://cwbukwybognng" path="res://art/run_cycle/painted/run_side_03.png" id="14_q13i1"]
+[ext_resource type="Texture2D" uid="uid://cegt8wabh75bt" path="res://art/run_cycle/painted/run_side_04.png" id="15_pylmc"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_dw050"]
 animations = [{
@@ -92,7 +92,7 @@ script = ExtResource("1_sweqy")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(1, 0)
 sprite_frames = SubResource("SpriteFrames_dw050")
-animation = &"up"
+animation = &"walk"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 77)
