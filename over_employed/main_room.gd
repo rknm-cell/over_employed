@@ -25,6 +25,7 @@ var current_task_locations = []  # What we're using now
 # UI (we'll add a simple label for now)
 var ui_label: Label
 var score = 0
+@onready var hud_lives = $HUD_lives
 
 var menu_manager: Control
 
@@ -225,6 +226,10 @@ func _on_game_won():
 
 func add_fail():
 	fail_count += 1
+	
+	# Update HUD lives
+	if hud_lives and fail_count <= 3:
+		hud_lives.get_node("Life_0%d/Fired" % fail_count).visible = true
 	
 	update_ui()    # Update UI immediately to show the new fail count
 	
