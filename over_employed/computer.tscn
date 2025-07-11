@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://jyja0pk8m05c" path="res://art/speech_bubbles/bubble_press_space.png" id="6_bubble_press_space"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4q3hy"]
-size = Vector2(748, 310)
+size = Vector2(636.923, 310)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_k1uhn"]
 animations = [{
@@ -71,14 +71,15 @@ script = ExtResource("1_vu6j8")
 
 [node name="ComputerBody" type="StaticBody2D" parent="."]
 
-[node name="Sprite2D" type="Sprite2D" parent="ComputerBody"]
-position = Vector2(65.9603, 7.21)
-scale = Vector2(1.09226, 0.976391)
-texture = ExtResource("2_jr5mb")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ComputerBody"]
-position = Vector2(60, -17)
+[node name="TableCollision" type="CollisionShape2D" parent="ComputerBody"]
+position = Vector2(46.1539, -17)
+scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_4q3hy")
+
+[node name="Table" type="Sprite2D" parent="ComputerBody"]
+position = Vector2(56.9231, 7.69231)
+scale = Vector2(0.9274, 0.976391)
+texture = ExtResource("2_jr5mb")
 
 [node name="ComputerSprite" type="AnimatedSprite2D" parent="ComputerBody"]
 position = Vector2(48, -26.5)
@@ -90,6 +91,8 @@ animation = &"off"
 position = Vector2(16.9231, -216.923)
 sprite_frames = SubResource("SpriteFrames_gxngq")
 animation = &"task"
+
+[node name="Node2D" type="Node2D" parent="ComputerBody"]
 
 [node name="InteractionArea" type="Area2D" parent="."]
 

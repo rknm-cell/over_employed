@@ -1,4 +1,4 @@
-# paper_shelf.gd - Updated with P key pickup
+# paper_shelf.gd - Updated with space key pickup
 extends Node2D
 
 @onready var shelf_visual = $ShelfBody/ShelfVisual  # Your shelf rectangle
@@ -6,13 +6,8 @@ extends Node2D
 @onready var interaction_area = $InteractionArea
 @onready var audio_player = AudioStreamPlayer2D.new()
 
-# ADD these sprite node references:
-@onready var task_bubble = $TaskBubble
-@onready var instruction_bubble = $InstructionBubble
-
-# ADD bubble texture preloads:
-@onready var bubble_exclamation = preload("res://art/speech_bubbles/bubble_exclamation.png")
-@onready var bubble_press_p = preload("res://art/speech_bubbles/bubble_press_p.png")
+# Use the existing SpeechBubbleAnimation under ShelfBody:
+@onready var speech_bubble = $ShelfBody/SpeechBubbleAnimation
 
 var player_nearby = false
 var has_paper = true
@@ -42,10 +37,12 @@ func _ready():
 	setup_paper_visual()
 	update_shelf_visual()
 	
-	task_bubble.texture = bubble_exclamation
-	instruction_bubble.texture = bubble_press_p
-	task_bubble.visible = false
-	instruction_bubble.visible = false
+	# Set speech bubble to default (no animation)
+	speech_bubble.animation = "default"
+	
+	# Ensure shelf starts with no active task
+	has_active_task = false
+	update_visual_state()
 
 func setup_paper_visual():
 	# Create paper visual if it doesn't exist
@@ -61,11 +58,16 @@ func setup_paper_visual():
 	paper_visual.color = Color.WHITE
 
 func _input(event):
-	# Handle P key for paper pickup
-	if event.is_action_pressed("cancel") and player_nearby:  # P key
+	# Handle space key for paper pickup
+	if event.is_action_pressed("ui_accept") and player_nearby:  # Space key
 		attempt_take_paper()
 
 func attempt_take_paper():
+	if not has_active_task:
+		print("No active task - paper not available!")
+		play_sound("error")
+		return
+	
 	if not has_paper:
 		print("No paper on shelf!")
 		play_sound("error")
@@ -109,10 +111,13 @@ func _on_player_entered(body):
 	if body.is_in_group("player"):
 		player_nearby = true
 		update_visual_state()
-		if has_paper:
-			print("Press P to pick up paper")
+		if has_active_task:
+			if has_paper:
+				print("Press P to pick up paper")
+			else:
+				print("Shelf is empty")
 		else:
-			print("Shelf is empty")
+			print("No active task - paper not available")
 
 func _on_player_exited(body):
 	if body.is_in_group("player"):
@@ -137,14 +142,11 @@ func set_task_active(active: bool):
 func update_visual_state():
 	if has_active_task:
 		if player_nearby:
-			# Show instruction, hide task bubble
-			task_bubble.visible = false
-			instruction_bubble.visible = true
+			# Show instruction animation when player is nearby
+			speech_bubble.animation = "instruction"
 		else:
-			# Show task bubble, hide instruction
-			task_bubble.visible = true
-			instruction_bubble.visible = false
+			# Show task animation when task is active but player not nearby
+			speech_bubble.animation = "task"
 	else:
-		# No active task - hide both
-		task_bubble.visible = false
-		instruction_bubble.visible = false
+		# No active task - show default (no animation)
+		speech_bubble.animation = "default"
