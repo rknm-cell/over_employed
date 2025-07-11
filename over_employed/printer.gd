@@ -1,15 +1,13 @@
-# printer.gd - Updated with auto-start and P key mechanics
+# printer.gd - Updated with auto-start and Space key mechanics
 extends Node2D
 
 @onready var printer_visual = $PrinterBody/PrinterVisual  # Your printer rectangle
 @onready var printer_light = $PrinterBody/PrinterLight  # Printer light indicator
 @onready var interaction_area = $InteractionArea
 @onready var audio_player = AudioStreamPlayer2D.new()
-# ADD these variables at the top with your other @onready vars:
 @onready var task_bubble = $TaskBubble
 @onready var instruction_bubble = $InstructionBubble
 @onready var printer_bubble_animation = $PrinterBody/PrinterBubbleAnimation
-
 
 # Printer states
 enum PrinterState { 
@@ -25,9 +23,9 @@ var current_state = PrinterState.IDLE
 var player_nearby = false
 
 # Paper jam fixing variables
-var is_holding_p = false
-var p_hold_time = 0.0
-var p_hold_duration = 5.0
+var is_holding_space = false
+var space_hold_time = 0.0
+var space_hold_duration = 2.0  # Changed from 5 to 2 seconds
 var fixing_paper_jam = false
 
 # Sounds
@@ -55,7 +53,10 @@ func _ready():
 	# Initialize printer light to off state
 	printer_light.animation = "off"
 	
-# ADD this function for MainRoom to call:
+	# Hide bubble animation initially (like computer.gd)
+	printer_bubble_animation.visible = false
+	printer_bubble_animation.animation = "default"
+
 func set_task_active(active: bool):
 	if active:
 		start_random_printer_task()
@@ -63,7 +64,7 @@ func set_task_active(active: bool):
 		# Reset printer to idle when task fails/completes
 		current_state = PrinterState.IDLE
 		update_printer_visual()
-	update_visual_state()
+		update_visual_state()
 
 func start_random_printer_task():
 	# Randomly choose between out of paper (blue) or paper jam (red)
@@ -84,44 +85,44 @@ func start_random_printer_task():
 	flash_task_start()
 
 func _input(event):
-	# Handle P key press for paper refill (when player has paper)
-	if event.is_action_pressed("cancel") and player_nearby:  # P key
-		handle_p_key_press()
+	# Handle Space key press for paper refill (when player has paper)
+	if event.is_action_pressed("ui_accept") and player_nearby:  # Space key
+		handle_space_key_press()
 
 func _process(delta):
-	# Handle holding P key for paper jam
+	# Handle holding Space key for paper jam
 	if current_state == PrinterState.PAPER_JAM and player_nearby and not fixing_paper_jam:
-		if Input.is_key_pressed(KEY_P):
-			if not is_holding_p:
-				# Start holding P
-				is_holding_p = true
-				p_hold_time = 0.0
-				game_ui.show_progress_bar(p_hold_duration, "Fixing paper jam (hold P)...")
+		if Input.is_action_pressed("ui_accept"):  # Space key
+			if not is_holding_space:
+				# Start holding Space
+				is_holding_space = true
+				space_hold_time = 0.0
+				game_ui.show_progress_bar(space_hold_duration, "Fixing paper jam (hold Space)...")
 			
 			# Update hold time
-			p_hold_time += delta
+			space_hold_time += delta
 			
 			# Update progress bar value
-			var progress = (p_hold_time / p_hold_duration) * 100
+			var progress = (space_hold_time / space_hold_duration) * 100
 			if game_ui and game_ui.progress_bar.visible:
 				game_ui.progress_bar.value = progress
 			
 			# Check if hold duration is complete
-			if p_hold_time >= p_hold_duration:
+			if space_hold_time >= space_hold_duration:
 				fix_paper_jam()
 		else:
-			# Player let go of P key - reset progress
-			if is_holding_p:
-				reset_p_hold()
+			# Player let go of Space key - reset progress
+			if is_holding_space:
+				reset_space_hold()
 
-func handle_p_key_press():
+func handle_space_key_press():
 	match current_state:
 		PrinterState.OUT_OF_PAPER:
 			attempt_refill_paper()
 		PrinterState.WAITING_FOR_PAPER_RETURN:
 			attempt_refill_paper()
 		PrinterState.PAPER_JAM:
-			pass
+			pass  # Paper jam uses hold, not press
 		PrinterState.IDLE:
 			pass
 		_:
@@ -166,9 +167,9 @@ func fix_paper_jam():
 	fixing_paper_jam = true
 	current_state = PrinterState.FIXING
 	
-	# Reset P key variables
-	is_holding_p = false
-	p_hold_time = 0.0
+	# Reset Space key variables
+	is_holding_space = false
+	space_hold_time = 0.0
 	
 	# Hide progress bar
 	if game_ui:
@@ -199,10 +200,11 @@ func complete_task():
 	await get_tree().create_timer(1.0).timeout
 	current_state = PrinterState.IDLE
 	update_printer_visual()
+	update_visual_state()
 
-func reset_p_hold():
-	is_holding_p = false
-	p_hold_time = 0.0
+func reset_space_hold():
+	is_holding_space = false
+	space_hold_time = 0.0
 	if game_ui and game_ui.progress_bar.visible:
 		game_ui.hide_progress_bar()
 
@@ -242,7 +244,7 @@ func update_printer_visual():
 
 func update_visual_state():
 	if current_state == PrinterState.IDLE or current_state == PrinterState.WAITING_FOR_PAPER_PICKUP:
-		# No active task on printer - hide bubble animation
+		# No active task on printer - hide bubble animation (like computer.gd)
 		printer_bubble_animation.visible = false
 	else:
 		# Has active task - show appropriate animation
@@ -261,8 +263,6 @@ func update_visual_state():
 			# Show task animation when player is away
 			printer_bubble_animation.animation = "task"
 
-
-
 func _on_player_entered(body):
 	if body.is_in_group("player"):
 		player_nearby = true
@@ -272,9 +272,9 @@ func _on_player_exited(body):
 	if body.is_in_group("player"):
 		player_nearby = false
 		update_visual_state()
-		# Reset P key progress if player leaves
-		if is_holding_p:
-			reset_p_hold()
+		# Reset Space key progress if player leaves
+		if is_holding_space:
+			reset_space_hold()
 
 func play_sound(sound_name: String):
 	if sounds.has(sound_name):
