@@ -73,7 +73,6 @@ script = ExtResource("1_vu6j8")
 
 [node name="TableCollision" type="CollisionShape2D" parent="ComputerBody"]
 position = Vector2(46.1539, -17)
-scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_4q3hy")
 
 [node name="Table" type="Sprite2D" parent="ComputerBody"]
@@ -88,6 +87,7 @@ sprite_frames = SubResource("SpriteFrames_k1uhn")
 animation = &"off"
 
 [node name="SpeechBubbleAnimation" type="AnimatedSprite2D" parent="ComputerBody"]
+modulate = Color(1, 0, 0, 1)
 position = Vector2(16.9231, -216.923)
 sprite_frames = SubResource("SpriteFrames_gxngq")
 animation = &"task"
