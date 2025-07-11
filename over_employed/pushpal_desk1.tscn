@@ -99,15 +99,3 @@ animation = &"hold"
 [node name="InteractionCollision" type="CollisionShape2D" parent="InteractionArea"]
 position = Vector2(55.5244, 54.9528)
 shape = SubResource("RectangleShape2D_se7ci")
-
-[node name="TaskBubble" type="Sprite2D" parent="."]
-position = Vector2(19.0138, 16.9845)
-rotation = -1.5708
-scale = Vector2(0.22, 0.22)
-texture = ExtResource("2_hdmwe")
-
-[node name="InstructionBubble" type="Sprite2D" parent="."]
-position = Vector2(17.0163, 19.9862)
-rotation = -1.5708
-scale = Vector2(0.22, 0.22)
-texture = ExtResource("3_yaucj")
