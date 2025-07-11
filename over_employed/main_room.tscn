@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://dqqm47swns33n"]
+[gd_scene load_steps=19 format=3 uid="uid://dqqm47swns33n"]
 
 [ext_resource type="Script" uid="uid://b0vnecxknxct1" path="res://main_room.gd" id="1_8007g"]
 [ext_resource type="PackedScene" uid="uid://ctec5h0a7ixy1" path="res://player.tscn" id="1_mi4c6"]
@@ -8,14 +8,12 @@
 [ext_resource type="PackedScene" uid="uid://poqqskn6cp0s" path="res://fern.tscn" id="4_c6jxq"]
 [ext_resource type="Script" uid="uid://bt7flelvl640a" path="res://pushpal_desk_3.gd" id="5_1oo4e"]
 [ext_resource type="Script" uid="uid://cav7axe0no0ac" path="res://pushpal_desk_2.gd" id="6_8007g"]
-[ext_resource type="PackedScene" path="res://game_ui.tscn" id="8_bdfba"]
+[ext_resource type="PackedScene" uid="uid://caaxhs5jdpml6" path="res://game_ui.tscn" id="8_bdfba"]
 [ext_resource type="PackedScene" uid="uid://wrftvqp476ci" path="res://shelf.tscn" id="9_pj3qg"]
 [ext_resource type="Script" uid="uid://dfd573usmvp4g" path="res://paper_shelf.gd" id="10_pj3qg"]
 [ext_resource type="PackedScene" uid="uid://b5tyc4vfw7nph" path="res://coffee.tscn" id="12_ruoc2"]
 [ext_resource type="Script" uid="uid://c41tj6pvukequ" path="res://coffee.gd" id="13_l7t8c"]
-[ext_resource type="Texture2D" uid="uid://gcb1j1bxbick" path="res://art/static_assets/table_white.png" id="14_0pgrc"]
 [ext_resource type="Texture2D" uid="uid://dryjbtnssjp8v" path="res://art/static_assets/table_brown.png" id="14_1xp4t"]
-[ext_resource type="Texture2D" uid="uid://630awjb6iqhu" path="res://art/computer/computer_side_on.png" id="15_c6jxq"]
 [ext_resource type="Texture2D" uid="uid://d0noivtc3baqu" path="res://art/backgrounds/floor.png" id="16_1xp4t"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_77bs5"]
@@ -25,25 +23,6 @@ size = Vector2(3456, 32)
 size = Vector2(32, 1944)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_eifuj"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_bt25u"]
-size = Vector2(123, 91.25)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_eifuj"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("15_c6jxq")
-}],
-"loop": true,
-"name": &"off",
-"speed": 5.0
-}]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_fouvm"]
-size = Vector2(87.75, 41.25)
-
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_fouvm"]
 
 [node name="MainRoom" type="Node2D"]
 scale = Vector2(0.78, 0.78)
@@ -135,49 +114,40 @@ z_index = 1
 position = Vector2(1232, 1685)
 script = ExtResource("13_l7t8c")
 
-[node name="Sprite2D" type="Sprite2D" parent="Coffee"]
+[node name="StaticBody2D" type="StaticBody2D" parent="Coffee"]
+
+[node name="Sprite2D" type="Sprite2D" parent="Coffee/StaticBody2D"]
 z_index = -1
 position = Vector2(270.497, 167.564)
 texture = ExtResource("14_1xp4t")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Coffee/Sprite2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Coffee/StaticBody2D"]
+position = Vector2(270.497, 167.564)
 scale = Vector2(35, 20)
 shape = SubResource("RectangleShape2D_eifuj")
-
-[node name="Desk_White" type="StaticBody2D" parent="."]
-visible = false
-position = Vector2(1405, 58)
-rotation = 1.5708
-scale = Vector2(4, 4)
-
-[node name="Desk_Sprite" type="Sprite2D" parent="Desk_White"]
-position = Vector2(72.5001, 26.2498)
-rotation = -1.5708
-scale = Vector2(0.231505, 0.220504)
-texture = ExtResource("14_0pgrc")
-
-[node name="Collision_table" type="CollisionShape2D" parent="Desk_White"]
-position = Vector2(60.25, 28.3746)
-shape = SubResource("RectangleShape2D_bt25u")
-disabled = true
-
-[node name="computer" type="AnimatedSprite2D" parent="Desk_White"]
-position = Vector2(50.7501, 23.9998)
-rotation = -1.5708
-scale = Vector2(0.27, 0.27)
-sprite_frames = SubResource("SpriteFrames_eifuj")
-animation = &"off"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Desk_White"]
-position = Vector2(57.1253, 75.6248)
-shape = SubResource("RectangleShape2D_fouvm")
-disabled = true
-
-[node name="Coffee_table" type="StaticBody2D" parent="."]
-position = Vector2(1735.9, 1002.56)
-physics_material_override = SubResource("PhysicsMaterial_fouvm")
 
 [node name="Floor" type="Sprite2D" parent="."]
 z_index = -1
 position = Vector2(1730.77, 976.923)
 texture = ExtResource("16_1xp4t")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+z_index = 12
+
+[node name="ColorRect" type="ColorRect" parent="StaticBody2D"]
+offset_left = 84.6154
+offset_top = 51.2821
+offset_right = 255.615
+offset_bottom = 245.282
+
+[node name="ColorRect2" type="ColorRect" parent="StaticBody2D"]
+offset_left = 342.308
+offset_top = 52.5641
+offset_right = 513.308
+offset_bottom = 246.564
+
+[node name="ColorRect3" type="ColorRect" parent="StaticBody2D"]
+offset_left = 610.256
+offset_top = 58.9744
+offset_right = 781.256
+offset_bottom = 252.974

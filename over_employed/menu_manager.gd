@@ -53,34 +53,19 @@ func setup_menu_panel(menu_panel: Control, title_text: String, instructions_text
 	# Get the main panel and center it
 	var main_panel = menu_panel.get_node("MainPanel")
 	
-	# Center the main panel on screen - FIX: Convert Vector2i to Vector2
-	var viewport_size = Vector2(get_viewport().size)  # Convert to Vector2
+	# Center the main panel on screen
+	var viewport_size = Vector2(get_viewport().size)
 	main_panel.position = (viewport_size - main_panel.size) / 2
 	
-	# Setup background to cover the main panel
-	var background = main_panel.get_node("Background")
-	background.size = main_panel.size
-	background.color = Color(0.1, 0.1, 0.2, 0.9)  # Dark blue with transparency
-	
-	# Setup title
+	# Setup title and instructions text
 	var title = main_panel.get_node("Title")
 	title.text = title_text
-	title.size = Vector2(main_panel.size.x - 40, 60)  # Full width minus padding
-	title.position = Vector2(20, 30)
-	title.add_theme_font_size_override("font_size", 36)
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_color_override("font_color", Color.WHITE)
+	# Hide title if empty (for start menu with image)
+	if title_text.is_empty():
+		title.visible = false
 	
-	# Setup instructions
 	var instructions = main_panel.get_node("Instructions")
 	instructions.text = instructions_text
-	instructions.size = Vector2(main_panel.size.x - 40, 200)  # Full width minus padding
-	instructions.position = Vector2(20, 120)
-	instructions.add_theme_font_size_override("font_size", 18)
-	instructions.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	instructions.vertical_alignment = VERTICAL_ALIGNMENT_TOP
-	instructions.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	instructions.add_theme_color_override("font_color", Color.WHITE)
 
 ########### START MENU LOGIC & HELPER FUNCs
 func create_start_menu():
@@ -88,7 +73,16 @@ func create_start_menu():
 	start_menu.name = "StartMenu"
 	add_child(start_menu)
 	
-	setup_menu_panel(start_menu, "OFFICE RUSH", "Complete tasks before time runs out!\n\nUse WASD to move around\nPress SPACE to interact with tasks\nDon't let too many tasks fail!")
+	setup_menu_panel(start_menu, "", "Complete tasks before time runs out!\n\nUse WASD to move around\nPress SPACE to interact with tasks\nDon't let too many tasks fail!")
+	
+	# Add menu title image
+	var title_texture = preload("res://art/static_assets/menu/menu_title.png")
+	var title_image = TextureRect.new()
+	title_image.texture = title_texture
+	title_image.size = Vector2(400, 100)  # Adjust size as needed
+	title_image.position = Vector2(100, 20)  # Position at top
+	title_image.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
+	start_menu.get_node("MainPanel").add_child(title_image)
 	
 	# Add start button
 	var start_button = CustomButtonScene.instantiate()

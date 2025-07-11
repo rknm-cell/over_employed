@@ -8,10 +8,12 @@ height = 162.0
 
 [node name="Fern" type="Node2D"]
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_4t5ey")
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 position = Vector2(-36, 154)
 scale = Vector2(2.97, 1)
 shape = SubResource("CapsuleShape2D_ovkww")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+texture = ExtResource("1_4t5ey")

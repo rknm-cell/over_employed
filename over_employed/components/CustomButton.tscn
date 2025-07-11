@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://btcx5ho75u34j"]
 
 [node name="CustomButton" type="Button"]
-offset_right = 300.0
-offset_bottom = 8.7
+offset_right = 575.0
+offset_bottom = 161.0
 text = "BUTTON"

@@ -1,8 +1,6 @@
 # paper_shelf.gd - Updated with space key pickup
 extends Node2D
-
-@onready var shelf_visual = $ShelfBody/ShelfVisual  # Your shelf rectangle
-@onready var paper_visual = $ShelfBody/PaperVisual  # Create a smaller white rectangle for paper
+# Create a smaller white rectangle for paper
 @onready var interaction_area = $InteractionArea
 @onready var audio_player = AudioStreamPlayer2D.new()
 
@@ -34,8 +32,7 @@ func _ready():
 	interaction_area.body_exited.connect(_on_player_exited)
 	
 	# Setup paper visual
-	setup_paper_visual()
-	update_shelf_visual()
+
 	
 	# Set speech bubble to default (no animation)
 	speech_bubble.animation = "default"
@@ -44,18 +41,7 @@ func _ready():
 	has_active_task = false
 	update_visual_state()
 
-func setup_paper_visual():
-	# Create paper visual if it doesn't exist
-	if not paper_visual:
-		paper_visual = ColorRect.new()
-		paper_visual.name = "PaperVisual"
-		$ShelfBody.add_child(paper_visual)
-	
-	# Make paper smaller than shelf and white
-	var shelf_size = shelf_visual.size if shelf_visual else Vector2(100, 100)
-	paper_visual.size = Vector2(shelf_size.x * 0.4, shelf_size.y * 0.2)  # Smaller rectangle
-	paper_visual.position = Vector2(shelf_size.x * 0.3, shelf_size.y * 0.4)  # Centered better
-	paper_visual.color = Color.WHITE
+
 
 func _input(event):
 	# Handle space key for paper pickup
@@ -84,7 +70,6 @@ func attempt_take_paper():
 func take_paper():
 	has_paper = false
 	game_ui.add_to_inventory("paper")
-	update_shelf_visual()
 	play_sound("paper_pickup")
 	print("Picked up paper!")
 	
@@ -100,12 +85,9 @@ func take_paper():
 func respawn_paper():
 	# Called when printer is fixed
 	has_paper = true
-	update_shelf_visual()
 	print("Paper restocked on shelf!")
 
-func update_shelf_visual():
-	if paper_visual:
-		paper_visual.visible = has_paper
+
 
 func _on_player_entered(body):
 	if body.is_in_group("player"):

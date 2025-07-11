@@ -15,16 +15,32 @@ offset_bottom = 450.0
 
 [node name="Background" type="ColorRect" parent="MainPanel"]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-color = Color(0, 0, 0, 1)
+offset_right = 600.0
+offset_bottom = 450.0
+color = Color(0.1, 0.1, 0.2, 0.9)
 
 [node name="Title" type="Label" parent="MainPanel"]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
+offset_left = 20.0
+offset_top = 30.0
+offset_right = 580.0
+offset_bottom = 90.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 36
+text = "TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
 
 [node name="Instructions" type="Label" parent="MainPanel"]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
+offset_left = 20.0
+offset_top = 140.0
+offset_right = 580.0
+offset_bottom = 340.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 18
+text = "INSTRUCTIONS"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
