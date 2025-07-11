@@ -15,9 +15,9 @@ var coffee_buff_duration = 30.0
 var player_node: CharacterBody2D
 var coffee_location_node: Node2D
 
-# Add these new variables after your existing game state variables
+# Difficulty progression variables
 var base_spawn_time = 5.0
-var min_spawn_time = 2.0
+var min_spawn_time = 1.0  # Changed from 2.0 to 1.0 for maximum chaos!
 var current_spawn_time = 5.0
 var speed_increase_interval = 30.0  # Every 30 seconds
 var last_speed_increase_time = 0.0
@@ -369,7 +369,7 @@ func reset_game():
 			location_node.set_task_active(false)
 	active_tasks.clear()
 	
-	# Reset ALL task locations to ensure no lingering tasks (THIS WAS MISSING!)
+	# Reset ALL task locations to ensure no lingering tasks
 	for location in all_task_locations:
 		if location.has_method("set_task_active"):
 			location.set_task_active(false)
@@ -377,7 +377,7 @@ func reset_game():
 		if location.has_method("reset_blinking"):
 			location.reset_blinking()
 	
-	# Reset HUD lives (THIS WAS MISSING!)
+	# Reset HUD lives
 	if hud_lives:
 		for i in range(1, 4):
 			var life_node = hud_lives.get_node("Life_0%d/Fired" % i)
@@ -408,5 +408,5 @@ func reset_game():
 	last_speed_increase_time = 0.0
 	task_spawn_timer.wait_time = current_spawn_time
 	
-	# Update UI to reflect reset state (THIS WAS MISSING!)
+	# Update UI to reflect reset state
 	update_ui()
